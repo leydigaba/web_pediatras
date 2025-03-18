@@ -6,13 +6,13 @@ render = web.template.render("views/")
 
 class Registro:
     def GET(self):
-        return render.registro()  # Renderiza la vista de registro
+        return render.registro()  
     
     def POST(self):
         try:
             datos = web.input()
             
-            # Validaciones
+            
             if not self.validar_nombre(datos.nombre) or not self.validar_nombre(datos.apellido1) or not self.validar_nombre(datos.apellido2):
                 return "Error: El nombre y apellidos solo pueden contener letras y espacios."
             
@@ -31,7 +31,7 @@ class Registro:
             if datos.password != datos.password_confirm:
                 return "Error: Las contraseñas no coinciden."
             
-            # Llamar a la función de registro en el modelo
+            
             resultado = registrar_usuario(
                 datos.nombre.strip(),
                 datos.apellido1.strip(),

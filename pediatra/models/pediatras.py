@@ -13,23 +13,11 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 auth = firebase.auth()
 
+
 def registrar_usuario(nombre, apellido1, apellido2, fecha_nacimiento, correo, licencia, password):
     try:
-        # Verificar si el usuario ya existe
-        try:
-            auth.sign_in_with_email_and_password(correo, password)
-            print("El usuario ya existe en Firebase.")
-            return False  # No se registra si ya existe
-        except:
-            pass  # Si el usuario no existe, continúa con el registro
+        user = auth.create_user_with_email_and_password(correo, password)  # ¡Firebase maneja la seguridad!
         
-        # Hash de la contraseña antes de guardarla en la base de datos
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        
-        # Registrar usuario en Firebase Authentication
-        user = auth.create_user_with_email_and_password(correo, password)
-        
-        # Guardar información adicional en la base de datos
         datos_usuario = {
             "nombre": nombre,
             "apellido1": apellido1,
@@ -37,24 +25,32 @@ def registrar_usuario(nombre, apellido1, apellido2, fecha_nacimiento, correo, li
             "fecha_nacimiento": fecha_nacimiento,
             "correo": correo,
             "licencia": licencia,
-            "password_hash": hashed_password,  # Guardar solo el hash, no la contraseña en texto plano
-            "uid": user["localId"]  # ID único de Firebase
+            "uid": user["localId"]  
         }
         
-        # Usar child() en lugar de collection() para Realtime Database
-        # Nota: Firebase Realtime Database no permite puntos en las claves
         db.child("usuarios").child(correo.replace(".", ",")).set(datos_usuario)
-        
         print("Usuario registrado correctamente.")
         return True
-    
+
     except Exception as e:
-        try:
-            error = json.loads(e.args[1])  # Decodificar error de Firebase
-            if "EMAIL_EXISTS" in error["error"]["message"]:
-                print("El correo ya está registrado.")
-            else:
-                print(f"Error al registrar usuario: {error['error']['message']}")
-        except:
-            print(f"Error inesperado: {str(e)}")
+        print(f"Error al registrar usuario: {str(e)}")
         return False
+
+
+def iniciar_sesion(correo, password):
+    try:
+        user = auth.sign_in_with_email_and_password(correo, password)
+        uid = user["localId"]
+        
+        datos_usuario = db.child("usuarios").child(correo.replace(".", ",")).get().val()
+        
+        if datos_usuario:
+            print("Inicio de sesión exitoso.")
+            return datos_usuario  
+        else:
+            print("No se encontraron datos del usuario.")
+            return None
+
+    except Exception as e:
+        print(f"Error en el inicio de sesión: {str(e)}")
+        return None
