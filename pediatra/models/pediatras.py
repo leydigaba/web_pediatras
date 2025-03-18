@@ -54,3 +54,14 @@ def iniciar_sesion(correo, password):
     except Exception as e:
         print(f"Error en el inicio de sesión: {str(e)}")
         return None
+
+
+
+    def lista_personas(self):
+        try:
+            datos = self.db.child("personas").get()
+            print("Datos crudos desde Firebase:", datos.val())  
+            return datos.val() if datos.val() else {}
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return {}

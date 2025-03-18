@@ -1,0 +1,467 @@
+$def with (datos)
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Seguimiento Infantil</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --sidebar-width: 250px;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fc;
+        }
+        
+        /* Sidebar */
+        #sidebar-wrapper {
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            background: var(--primary-color);
+            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+            position: fixed;
+            z-index: 999;
+            transition: all 0.3s;
+        }
+        
+        #sidebar-wrapper .sidebar-heading {
+            padding: 1.5rem 1rem;
+            font-size: 1.5rem;
+            color: white;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #sidebar-wrapper .list-group {
+            width: var(--sidebar-width);
+        }
+        
+        #sidebar-wrapper .list-group-item {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        #sidebar-wrapper .list-group-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        #sidebar-wrapper .list-group-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        
+        #sidebar-wrapper .list-group-item i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Contenido principal */
+        #page-content-wrapper {
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        /* Encabezado y búsqueda */
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Barra de búsqueda desplegable */
+        .search-toggle {
+            cursor: pointer;
+            margin-right: 10px;
+            color: #4e73df;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .search-section {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .search-section.collapsed {
+            max-height: 0;
+            padding: 0 1.5rem;
+            margin-bottom: 0;
+            opacity: 0;
+        }
+        
+        /* Tabla de pacientes */
+        .table-container {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .table-container .table {
+            margin-bottom: 0;
+        }
+        
+        .table-container .table thead th {
+            background-color: #f8f9fc;
+            border-top: none;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 0.4rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-activo {
+            background-color: #1cc88a;
+            color: white;
+        }
+        
+        .status-inactivo {
+            background-color: #e74a3b;
+            color: white;
+        }
+        
+        .status-pendiente {
+            background-color: #f6c23e;
+            color: white;
+        }
+        
+        .btn-action {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        /* Botón flotante para agregar paciente */
+        .btn-float {
+            position: fixed;
+            right: 2rem;
+            bottom: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 0.25rem 1rem 0 rgba(58, 59, 69, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: -var(--sidebar-width);
+            }
+            
+            #page-content-wrapper {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            #sidebar-wrapper.active {
+                margin-left: 0;
+            }
+            
+            #page-content-wrapper.active {
+                margin-left: var(--sidebar-width);
+                width: calc(100% - var(--sidebar-width));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <i class="fas fa-heartbeat"></i> PediaSeguimiento
+            </div>
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                    <i class="fas fa-home"></i> Principal
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-user-md"></i> Pacientes
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-calendar-alt"></i> Citas
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-chart-line"></i> Estadísticas
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-cog"></i> Configuración
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div id="page-content-wrapper">
+            <!-- Encabezado -->
+            <div class="page-header">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h1 class="h3 mb-0 text-gray-800">Gestión de Pacientes</h1>
+                        <p class="text-muted">Seguimiento y control de pacientes infantiles</p>
+                    </div>
+                    <div class="d-none d-md-block">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Nuevo Paciente
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Barra de búsqueda compacta -->
+            <div class="search-container mb-4">
+                <div class="search-input-group">
+                    <button class="btn btn-light search-toggle" id="toggleSearch">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar paciente...">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Sección de búsqueda desplegable -->
+                <div class="search-section collapsed" id="searchSection">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <select class="form-select" id="edad">
+                                <option value="">Todas las edades</option>
+                                <option value="0-1">0-1 años</option>
+                                <option value="1-3">1-3 años</option>
+                                <option value="3-5">3-5 años</option>
+                                <option value="5-12">5-12 años</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado">
+                                <option value="">Todos los estados</option>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                                <option value="pendiente">Pendiente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="genero" class="form-label">Género</label>
+                            <select class="form-select" id="genero">
+                                <option value="">Todos</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-sync-alt"></i> Restablecer
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabla de pacientes -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Género</th>
+                                <th>Última visita</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P001</td>
+                                <td>Ana María López</td>
+                                <td>3 años</td>
+                                <td>Femenino</td>
+                                <td>15/03/2025</td>
+                                <td><span class="status-badge status-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-action">
+                                        <i class="fas fa-folder-open"></i> Ver
+                                    </button>
+                                    <button class="btn btn-sm btn-success btn-action">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P002</td>
+                                <td>Carlos Ramírez</td>
+                                <td>5 años</td>
+                                <td>Masculino</td>
+                                <td>10/03/2025</td>
+                                <td><span class="status-badge status-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-action">
+                                        <i class="fas fa-folder-open"></i> Ver
+                                    </button>
+                                    <button class="btn btn-sm btn-success btn-action">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P003</td>
+                                <td>Sofía Martínez</td>
+                                <td>2 años</td>
+                                <td>Femenino</td>
+                                <td>05/03/2025</td>
+                                <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-action">
+                                        <i class="fas fa-folder-open"></i> Ver
+                                    </button>
+                                    <button class="btn btn-sm btn-success btn-action">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P004</td>
+                                <td>Juan Pablo Sánchez</td>
+                                <td>8 años</td>
+                                <td>Masculino</td>
+                                <td>28/02/2025</td>
+                                <td><span class="status-badge status-inactivo">Inactivo</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-action">
+                                        <i class="fas fa-folder-open"></i> Ver
+                                    </button>
+                                    <button class="btn btn-sm btn-success btn-action">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P005</td>
+                                <td>Valentina Gómez</td>
+                                <td>1 año</td>
+                                <td>Femenino</td>
+                                <td>17/03/2025</td>
+                                <td><span class="status-badge status-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-action">
+                                        <i class="fas fa-folder-open"></i> Ver
+                                    </button>
+                                    <button class="btn btn-sm btn-success btn-action">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <span class="text-muted">Mostrando 1-5 de 25 pacientes</span>
+                    </div>
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botón flotante para agregar paciente en móvil -->
+    <button class="btn btn-primary btn-float d-md-none">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+    <!-- Bootstrap JS y Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar en móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnFloat = document.querySelector('.btn-float');
+            const sidebar = document.getElementById('sidebar-wrapper');
+            const content = document.getElementById('page-content-wrapper');
+            
+            btnFloat.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                content.classList.toggle('active');
+            });
+            
+            // Toggle de la sección de búsqueda
+            const toggleSearch = document.getElementById('toggleSearch');
+            const searchSection = document.getElementById('searchSection');
+            
+            toggleSearch.addEventListener('click', function() {
+                searchSection.classList.toggle('collapsed');
+                
+                // Cambiar icono del botón
+                const icon = toggleSearch.querySelector('i');
+                if (searchSection.classList.contains('collapsed')) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-filter');
+                } else {
+                    icon.classList.remove('fa-filter');
+                    icon.classList.add('fa-chevron-up');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
