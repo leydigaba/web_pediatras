@@ -5,7 +5,7 @@ render = web.template.render("views/")
 
 class Iniciosesion:
     def GET(self):
-        return render.iniciosesion(datos={})  # Aseguramos que 'datos' se pase vacío
+        return render.iniciosesion(datos={})  
 
     def POST(self):
         try:
@@ -20,14 +20,14 @@ class Iniciosesion:
             print(f"Resultado de iniciar_sesion: {usuario}")  
 
             if usuario:
-                web.ctx.session.usuario = usuario  
-                print("Redireccionando a /listapersonas")  
+                session = web.ctx.session  # Acceder correctamente a la sesión
+                session.usuario = usuario  # Guardar el usuario en sesión
+                print("✅ Sesión iniciada correctamente.")
                 return web.seeother("/listapersonas")
             else:
-                print("Credenciales incorrectas")  
+                print("❌ Credenciales incorrectas")  
                 return render.iniciosesion(datos={"error": "Correo o contraseña incorrectos."})
 
         except Exception as e:
-            error_msg = f"Error en inicio de sesión: {str(e)}"
-            print(error_msg)  
-            return render.iniciosesion(datos={"error": error_msg})
+            print(f"⚠️ Error en inicio de sesión: {str(e)}")  
+            return render.iniciosesion(datos={"error": str(e)})

@@ -20,28 +20,15 @@ urls = (
 
 app = web.application(urls, globals())
 
-# 🔹 Configuración de sesión
-session_store = web.session.DiskStore("sessions")
-session = web.session.Session(app, session_store, initializer={"usuario": None})
+# 📌 Asegurar que la sesión esté configurada correctamente
+if web.config.get('_session') is None:  # Evitar que la sesión se reinicialice en cada request
+    session = web.session.Session(app, web.session.DiskStore("sessions"), initializer={"usuario": None})
+    web.config._session = session  # Guardar la sesión en web.config
 
+# 📌 Hacer que session sea accesible globalmente
 def session_hook():
-    """Asigna la sesión al contexto de la aplicación."""
-    web.ctx.session = session  
+    web.ctx.session = web.config._session
 
 app.add_processor(web.loadhook(session_hook))
-
-# 🔹 Protección de rutas con sesión
-def auth_hook():
-    rutas_protegidas = ["/listapersonas", "/agregar"]  
-    usuario_en_sesion = web.ctx.session.get("usuario") 
-
-    print(f"🟡 Usuario en sesión: {usuario_en_sesion}")  # Para depuración
-
-    if web.ctx.path in rutas_protegidas and not usuario_en_sesion:
-        print(f"🔴 Acceso denegado a {web.ctx.path}: Usuario no autenticado.")
-        return web.seeother("/iniciosesion")  # Redirige al login
-
-app.add_processor(web.loadhook(auth_hook))
-
 if __name__ == "__main__":
     app.run()

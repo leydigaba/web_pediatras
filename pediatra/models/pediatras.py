@@ -55,6 +55,8 @@ def iniciar_sesion(correo, password):
         print(f"Error en el inicio de sesión: {str(e)}")
         return None
 
+        
+
 
 
 class Personas:
