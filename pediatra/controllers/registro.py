@@ -43,7 +43,7 @@ class Registro:
             )
             
             if resultado:
-                raise web.seeother('/exito')  # Redirige a una página de éxito
+                raise web.seeother('/iniciosesion')  
             else:
                 return "Error: No se pudo registrar el usuario. Es posible que el correo ya esté en uso."
                 

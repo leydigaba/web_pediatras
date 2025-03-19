@@ -5,10 +5,9 @@ render = web.template.render("views/")
 class ListaPersonas:
     def GET(self):
         try:
-            p = Personas()  # Instancia del modelo
-            datos = p.lista_personas()  # Obtiene los datos
-            return render.lista_personas(datos)  # Renderiza la vista con los datos
+            p = Personas()  
+            datos = p.lista_personas()  
+            return render.lista_personas(datos)  
         except Exception as error:
-            message = {"Error": str(error)}
-            print(f"ERROR: {message}")  
+            print(f" ERROR: {str(error)}")
             return "Ocurrió un error, revisa la consola."
