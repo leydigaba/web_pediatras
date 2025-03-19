@@ -57,6 +57,10 @@ def iniciar_sesion(correo, password):
 
 
 
+class Personas:
+    def __init__(self):
+        self.db = db
+
     def lista_personas(self):
         try:
             datos = self.db.child("personas").get()
@@ -65,3 +69,10 @@ def iniciar_sesion(correo, password):
         except Exception as e:
             print(f"Error: {str(e)}")
             return {}
+
+    def agregar_persona(self, nombre, edad):
+        try:
+            nueva_persona = {"nombre": nombre, "edad": edad}
+            self.db.child("personas").push(nueva_persona)
+        except Exception as e:
+            print(f"Error al agregar persona: {str(e)}")

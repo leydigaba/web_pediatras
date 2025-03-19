@@ -2,7 +2,9 @@ import web
 from controllers.index import Index  
 from controllers.registro import Registro as Registro
 from controllers.iniciosesion import Iniciosesion as Iniciosesion
-from controllers.pacientes import ListaPersonas as ListaPersonas
+from controllers.lista_personas import ListaPersonas as ListaPersonas
+from controllers.agregar_personas import AgregarPersona as AgregarPersona
+
 
 
 
@@ -10,7 +12,8 @@ urls = (
     "/", "Index",
     "/registro", "Registro",
     "/iniciosesion", "Iniciosesion",
-    "/listapersonas", "Listapersonas",
+    "/listapersonas", "ListaPersonas",
+    "/agregar", "AgregarPersona"
     
 )
 
