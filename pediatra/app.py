@@ -4,7 +4,6 @@ from controllers.registro import Registro as Registro
 from controllers.iniciosesion import Iniciosesion as Iniciosesion
 from controllers.lista_personas import ListaPersonas as ListaPersonas
 from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
-from controllers.detalle import DetallePersonas as DetallePersonas
 from controllers.cerrarsesion import Logout as Logout
 
 
@@ -17,7 +16,7 @@ urls = (
     '/iniciosesion', 'Iniciosesion',
     '/listapersonas', 'ListaPersonas',
     '/agregar', 'AgregarPaciente',
-    '/detalle/$id', 'DetallePersonas',
+    
     '/logout', 'Logout'
 
 )

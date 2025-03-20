@@ -207,17 +207,16 @@ $def with (datos)
                 <a href="/lista_personas" class="list-group-item active">
                     <i class="fas fa-user-md"></i> Pacientes
                 </a>
-                <a href="/citas" class="list-group-item">
-                    <i class="fas fa-calendar-alt"></i> Citas
-                </a>
                 <a href="/estadisticas" class="list-group-item">
                     <i class="fas fa-chart-line"></i> Estadísticas
                 </a>
                 <a href="/configuracion" class="list-group-item">
                     <i class="fas fa-cog"></i> Configuración
                 </a>
-                <a href="/logout">Cerrar Sesión</a>
-
+                
+                <a href="/logout" class="list-group-item">
+                    <i class="fas fa-cog"></i> Cerrar Sesión
+                </a>
             </div>
         </div>
         
@@ -329,14 +328,13 @@ $def with (datos)
                                                 <span class="status-badge status-pendiente">Pendiente</span>
                                         </td>
                                         <td>
-                                            <a href="//$id" class="btn btn-sm btn-primary btn-action">
+                                            <a href="/detalle_persona/{{ paciente_id }}" class="btn btn-sm btn-primary btn-action">
                                                 <i class="fas fa-folder-open"></i> Ver
                                             </a>
-                                            <a href="/editar_paciente/$id" class="btn btn-sm btn-success btn-action">
+                                            <a href="/editar_paciente/{{ paciente_id }}" class="btn btn-sm btn-success btn-action">
                                                 <i class="fas fa-edit"></i> Editar
                                             </a>
                                         </td>
-                                    </tr>
                             $else:
                                 <tr>
                                     <td colspan="7" class="text-center py-4">

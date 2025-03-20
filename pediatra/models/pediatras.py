@@ -55,7 +55,7 @@ def iniciar_sesion(correo, password):
         print(f"Error en el inicio de sesión: {str(e)}")
         return None
 
-        
+
 
 class Personas:
     def __init__(self):
@@ -101,4 +101,3 @@ class Personas:
         except Exception as e:
             print(f"Error al agregar paciente: {str(e)}")
             return False
-
