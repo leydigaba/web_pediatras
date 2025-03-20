@@ -5,6 +5,12 @@ from controllers.iniciosesion import Iniciosesion as Iniciosesion
 from controllers.lista_personas import ListaPersonas as ListaPersonas
 from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
 from controllers.cerrarsesion import Logout as Logout
+from controllers.indexadmin import IndexAdmin
+from controllers.admins.vistaadmins import VistaAdmins
+from controllers.admins.vistapediatras import VistaPediatras
+from controllers.admins.vistapacientes import VistaPacientes
+from controllers.admins.vistarespuestas import VistaRespuestas
+from controllers.admins.vistareportes import VistaReportes
 
 
 web.config.debug = False  
@@ -16,9 +22,13 @@ urls = (
     '/iniciosesion', 'Iniciosesion',
     '/listapersonas', 'ListaPersonas',
     '/agregar', 'AgregarPaciente',
-    
-    '/logout', 'Logout'
-
+    '/logout', 'Logout',
+    '/indexadmin', 'IndexAdmin',
+    '/vistaadmins', 'VistaAdmins',
+    '/vistapediatras', 'VistaPediatras',
+    '/vistapacientes', 'VistaPacientes',
+    '/vistarespuestas', 'VistaRespuestas',
+    '/vistareportes', 'VistaReportes'
 )
 
 app = web.application(urls, globals())

@@ -1,7 +1,6 @@
 import web
-from models.pediatras import iniciar_sesion 
+from models.pediatras import iniciar_sesion
 render = web.template.render("views/")
-
 
 class Iniciosesion:
     def GET(self):
@@ -20,10 +19,15 @@ class Iniciosesion:
             print(f"Resultado de iniciar_sesion: {usuario}")  
 
             if usuario:
-                session = web.ctx.session  # Acceder correctamente a la sesión
+                session = web.ctx.session  # Acceder a la sesión
                 session.usuario = usuario  # Guardar el usuario en sesión
                 print("✅ Sesión iniciada correctamente.")
-                return web.seeother("/listapersonas")
+
+                # Redirigir según el rol del usuario
+                if usuario.get("rol") == "admin":
+                    return web.seeother("/indexadmin")
+                else:
+                    return web.seeother("/listapersonas")
             else:
                 print("❌ Credenciales incorrectas")  
                 return render.iniciosesion(datos={"error": "Correo o contraseña incorrectos."})

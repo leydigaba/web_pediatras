@@ -1,0 +1,223 @@
+/* ======== Estilos Generales ======== */
+body {
+    background-color: #f8f9fa;
+    margin: 0;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+/* ======== Sidebar ======== */
+.sidebar {
+    width: 180px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background-color: #e9f0f7;
+    padding: 20px 10px;
+}
+
+/* ======== Contenedor de Iconos ======== */
+.icons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* ======== Botón Home ======== */
+.button_home {
+    margin-top: 30px;
+    width: 100px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.button_home:hover {
+    background: #d0e0f0;
+    transform: scale(1.1);
+}
+
+/* ======== Botón Chat ======== */
+.button_chat {
+    width: 100px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.button_chat:hover {
+    background: #d0e0f0;
+    transform: scale(1.1);
+}
+
+/* ======== Botón Archivos ======== */
+.button_pacientes {
+    width: 100px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.button_pacientes:hover {
+    background: #d0e0f0;
+    transform: scale(1.1);
+}
+
+/* ======== Botón Doctores ======== */
+.button_doctors {
+    width: 100px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.button_doctors:hover {
+    background: #d0e0f0;
+    transform: scale(1.1);
+}
+
+/* ======== Botón Reportes ======== */
+.button_reports {
+    width: 100px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.button_reports:hover {
+    background: #d0e0f0;
+    transform: scale(1.1);
+}
+
+/* ======== Iconos dentro de los botones ======== */
+.button_home i,
+.button_chat i,
+.button_pacientes i,
+.button_doctors i,
+.button_reports i {
+    font-size: 50px;
+    color: #000;
+}
+
+/* ======== Botón Administradores y Cerrar Sesión ======== */
+.button_action {
+    background-color: #ffffff;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #000;
+    text-align: center;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.3s;
+    width: 100%;
+    font-size: 15px;
+}
+
+.button_action:hover {
+    background-color: #d0e0f0;
+    transform: scale(1.1);
+}
+
+
+
+/* ======== Contenedor Principal ======== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+    box-sizing: border-box;
+}
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-content3 {
+    width: 460px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 12% auto;
+}
+.title3 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+.addvert {
+    font-size: 22px;
+    margin: 0;
+}
+.warning {
+    font-size: 16px;
+    color: #e74c3c;
+    margin-top: 15px;
+    text-align: center;
+}
+.button-container1 {
+    text-align: center;
+    margin-top: 30px;
+    gap: 15px; /* Espacio entre botones */
+    display: flex;
+    justify-content: center;
+}
+.closes {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 45%;
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease; /* Transición suave */
+}
+.closes:hover {
+    background-color: #e74c3c;
+    transform: scale(1.05); /* Aumenta un 5% el tamaño del botón */
+}
+.cancel-closes {
+    background-color: #ccc;
+    color: black;
+}
+.cancel-closes:hover {
+    background-color: #ccccccc2; /* Rojo cuando se pasa el cursor */
+    color: black;
+}
