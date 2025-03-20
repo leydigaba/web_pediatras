@@ -4,7 +4,8 @@ from controllers.registro import Registro as Registro
 from controllers.iniciosesion import Iniciosesion as Iniciosesion
 from controllers.lista_personas import ListaPersonas as ListaPersonas
 from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
-from controllers.grafica import CrecimientoInfantilControlador as CrecimientoInfantilControlador
+from controllers.detalle import DetallePersonas as DetallePersonas
+from controllers.cerrarsesion import Logout as Logout
 
 
 web.config.debug = False  
@@ -15,8 +16,10 @@ urls = (
     '/registro', 'Registro',
     '/iniciosesion', 'Iniciosesion',
     '/listapersonas', 'ListaPersonas',
-    '/agregar', 'AgregarPaciente',  
-    '/grafica', 'CrecimientoInfantilVista'
+    '/agregar', 'AgregarPaciente',
+    '/detalle/$id', 'DetallePersonas',
+    '/logout', 'Logout'
+
 )
 
 app = web.application(urls, globals())

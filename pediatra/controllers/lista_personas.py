@@ -5,32 +5,27 @@ render = web.template.render("views/")
 class ListaPersonas: 
     def GET(self):
         try:
-            # Verificamos si web.ctx tiene una sesión
-            if not hasattr(web.ctx, 'session') or not web.ctx.session.get('usuario'):
+            # Verificamos si la sesión está iniciada
+            session = web.ctx.session  # Asegurarse de que la sesión está configurada
+            if not session.get('usuario'):  # Si no hay usuario en sesión
                 print("🚫 No hay usuario en sesión. Redirigiendo a /iniciosesion...")
-                return web.seeother('/iniciosesion')
-
-            print(f"🔍 Sesión actual: {web.ctx.session.get('usuario')}")
+                raise web.seeother('/iniciosesion')  # Redirige a la página de inicio de sesión
+            
+            print(f"🔍 Sesión actual: {session.get('usuario')}")
 
             p = Personas()  
-            # Obtenemos la lista de pacientes
             pacientes = p.lista_pacientes()  
-            
+
             # Procesamos los datos para asegurarnos de que tengan las propiedades necesarias
             for id, paciente in pacientes.items():
-                # Establecemos valores por defecto si no existen
-                if 'estado' not in paciente:
-                    paciente['estado'] = 'pendiente'
-                    
-                # Aseguramos que la edad tenga el formato correcto
+                paciente.setdefault('estado', 'pendiente')
                 if 'edad' in paciente and isinstance(paciente['edad'], (int, float)):
                     paciente['edad'] = f"{paciente['edad']} años"
-                    
-                # Agregamos una fecha de última visita si no existe
-                if 'ultima_visita' not in paciente:
-                    paciente['ultima_visita'] = 'Sin registro'
-            
+                paciente.setdefault('ultima_visita', 'Sin registro')
+
             return render.lista_personas(pacientes)
+        except web.seeother as redireccion:
+            raise redireccion  # Redirige correctamente sin capturar como error
         except Exception as error:
             print(f"❌ ERROR: {str(error)}")
             return "Ocurrió un error, revisa la consola."
