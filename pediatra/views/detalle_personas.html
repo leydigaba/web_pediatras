@@ -1,0 +1,133 @@
+$def with (paciente_id, paciente)
+<div class="container py-4">
+    <div class="card border rounded-3">
+        <div class="card-header bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Ficha del Paciente</h2>
+                <div>
+                    <a href="/editar_paciente/$paciente_id" class="btn btn-light btn-sm">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <h3 class="border-bottom pb-2">Información Personal</h3>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" style="width: 40%;">Nombre Completo</th>
+                                        <td>$paciente.get('nombre', '') $paciente.get('apellidos', '')</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Fecha de Nacimiento</th>
+                                        <td>$paciente.get('fechaNacimiento', '')</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Edad</th>
+                                        <td>$paciente.get('edad', '')</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" style="width: 40%;">Género</th>
+                                        <td>$paciente.get('genero', '')</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Pediatra Asignado</th>
+                                        <td>$paciente.get('pediatraAsignado', '')</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">ID</th>
+                                        <td>$paciente_id</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                $if 'historialMedico' in paciente:
+                    <div class="col-md-12 mb-4">
+                        <h3 class="border-bottom pb-2">Historial Médico</h3>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Diagnóstico</th>
+                                        <th>Tratamiento</th>
+                                        <th>Notas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    $for fecha, consulta in paciente['historialMedico'].items():
+                                        <tr>
+                                            <td>$fecha</td>
+                                            <td>$consulta.get('diagnostico', '')</td>
+                                            <td>$consulta.get('tratamiento', '')</td>
+                                            <td>$consulta.get('notas', '')</td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                
+                $if 'alergias' in paciente:
+                    <div class="col-md-6 mb-4">
+                        <h3 class="border-bottom pb-2">Alergias</h3>
+                        <ul class="list-group mt-3">
+                            $if isinstance(paciente['alergias'], list):
+                                $for alergia in paciente['alergias']:
+                                    <li class="list-group-item">$alergia</li>
+                            $elif isinstance(paciente['alergias'], dict):
+                                $for nombre, detalle in paciente['alergias'].items():
+                                    <li class="list-group-item">
+                                        <strong>$nombre:</strong> $detalle
+                                    </li>
+                            $else:
+                                <li class="list-group-item">$paciente['alergias']</li>
+                        </ul>
+                    </div>
+                
+                $if 'vacunas' in paciente:
+                    <div class="col-md-6 mb-4">
+                        <h3 class="border-bottom pb-2">Vacunas</h3>
+                        <ul class="list-group mt-3">
+                            $if isinstance(paciente['vacunas'], dict):
+                                $for nombre, detalle in paciente['vacunas'].items():
+                                    <li class="list-group-item">
+                                        <strong>$nombre:</strong> 
+                                        $if isinstance(detalle, dict):
+                                            $for k, v in detalle.items():
+                                                <br>$k: $v
+                                        $else:
+                                            $detalle
+                                    </li>
+                            $elif isinstance(paciente['vacunas'], list):
+                                $for vacuna in paciente['vacunas']:
+                                    <li class="list-group-item">$vacuna</li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+        
+        <div class="card-footer bg-light d-flex justify-content-between">
+            <a href="/pacientes" class="btn btn-dark">
+                <i class="bi bi-arrow-left"></i> Volver a la lista
+            </a>
+            <a href="/editar_paciente/$paciente_id" class="btn btn-secondary">
+                <i class="bi bi-pencil"></i> Editar Paciente
+            </a>
+        </div>
+    </div>
+</div>

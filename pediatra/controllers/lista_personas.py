@@ -11,6 +11,7 @@ class ListaPersonas:
                 print("🚫 No hay usuario en sesión. Redirigiendo a /iniciosesion...")
                 raise web.seeother('/iniciosesion')  # Redirige a la página de inicio de sesión
             
+            
             print(f"🔍 Sesión actual: {session.get('usuario')}")
 
             p = Personas()  

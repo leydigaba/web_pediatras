@@ -71,7 +71,6 @@ class Personas:
             return {}
     
     def agregar_persona(self, nombre, edad):
-        """Método existente para agregar personas simples"""
         try:
             persona = {
                 "nombre": nombre,
@@ -84,7 +83,7 @@ class Personas:
             return False
 
     def lista_pacientes(self):
-        """Método para listar pacientes"""
+        
         try:
             datos = self.db.child("pacientes").get()
             print("Datos de pacientes:", datos.val())  
@@ -101,3 +100,11 @@ class Personas:
         except Exception as e:
             print(f"Error al agregar paciente: {str(e)}")
             return False
+
+    def obtener_usuario(self, usuario_id):
+        try:
+            usuario = self.db.child("usuarios").child(usuario_id).get().val()
+            return usuario
+        except Exception as e:
+            print(f"Error al obtener usuario: {str(e)}")
+            return None
