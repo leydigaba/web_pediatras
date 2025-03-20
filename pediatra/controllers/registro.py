@@ -69,3 +69,5 @@ class Registro:
     def validar_password(self, password):
         """Verifica que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número"""
         return bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$", password))
+
+        

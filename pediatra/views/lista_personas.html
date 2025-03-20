@@ -1,5 +1,4 @@
 $def with (datos)
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -202,22 +201,22 @@ $def with (datos)
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <div class="sidebar-heading">
-                <i class="fas fa-heartbeat"></i> PediaSeguimiento
+                <i class="fas fa-heartbeat"></i> BabyChat
             </div>
             <div class="list-group">
-                <a href="#" class="list-group-item active">
-                    <i class="fas fa-home"></i> Principal
-                </a>
-                <a href="#" class="list-group-item">
+                <a href="/lista_personas" class="list-group-item active">
                     <i class="fas fa-user-md"></i> Pacientes
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="/citas" class="list-group-item">
+                    <i class="fas fa-calendar-alt"></i> Citas
+                </a>
+                <a href="/estadisticas" class="list-group-item">
                     <i class="fas fa-chart-line"></i> Estadísticas
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="/configuracion" class="list-group-item">
                     <i class="fas fa-cog"></i> Configuración
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="/cerrarsesion" class="list-group-item">
                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </a>
             </div>
@@ -233,11 +232,14 @@ $def with (datos)
                         <p class="text-muted">Seguimiento y control de pacientes infantiles</p>
                     </div>
                     <div class="d-none d-md-block">
-                        <a href="/agregar" class="btn btn-primary">Agregar Persona</a>
+                        <a href="/agregar" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Nuevo Paciente
+                        </a>
                     </div>
                 </div>
             </div>
             
+            <!-- Barra de búsqueda compacta -->
             <div class="search-container mb-4">
                 <div class="search-input-group">
                     <button class="btn btn-light search-toggle" id="toggleSearch">
@@ -311,119 +313,76 @@ $def with (datos)
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>P001</td>
-                                <td>Ana María López</td>
-                                <td>3 años</td>
-                                <td>Femenino</td>
-                                <td>15/03/2025</td>
-                                <td><span class="status-badge status-activo">Activo</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btn-action">
-                                        <i class="fas fa-folder-open"></i> Ver
-                                    </button>
-                                    <button class="btn btn-sm btn-success btn-action">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P002</td>
-                                <td>Carlos Ramírez</td>
-                                <td>5 años</td>
-                                <td>Masculino</td>
-                                <td>10/03/2025</td>
-                                <td><span class="status-badge status-activo">Activo</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btn-action">
-                                        <i class="fas fa-folder-open"></i> Ver
-                                    </button>
-                                    <button class="btn btn-sm btn-success btn-action">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P003</td>
-                                <td>Sofía Martínez</td>
-                                <td>2 años</td>
-                                <td>Femenino</td>
-                                <td>05/03/2025</td>
-                                <td><span class="status-badge status-pendiente">Pendiente</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btn-action">
-                                        <i class="fas fa-folder-open"></i> Ver
-                                    </button>
-                                    <button class="btn btn-sm btn-success btn-action">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P004</td>
-                                <td>Juan Pablo Sánchez</td>
-                                <td>8 años</td>
-                                <td>Masculino</td>
-                                <td>28/02/2025</td>
-                                <td><span class="status-badge status-inactivo">Inactivo</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btn-action">
-                                        <i class="fas fa-folder-open"></i> Ver
-                                    </button>
-                                    <button class="btn btn-sm btn-success btn-action">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P005</td>
-                                <td>Valentina Gómez</td>
-                                <td>1 año</td>
-                                <td>Femenino</td>
-                                <td>17/03/2025</td>
-                                <td><span class="status-badge status-activo">Activo</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btn-action">
-                                        <i class="fas fa-folder-open"></i> Ver
-                                    </button>
-                                    <button class="btn btn-sm btn-success btn-action">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                </td>
-                            </tr>
+                            $if datos:
+                                $for id, paciente in datos.items():
+                                    <tr>
+                                        <td>$paciente.get('id', id[:6])</td>
+                                        <td>$paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')</td>
+                                        <td>$paciente.get('edad', 'N/A')</td>
+                                        <td>$paciente.get('genero', 'N/A')</td>
+                                        <td>$paciente.get('ultima_visita', 'Sin visitas')</td>
+                                        <td>
+                                            $if paciente.get('estado') == 'activo':
+                                                <span class="status-badge status-activo">Activo</span>
+                                            $elif paciente.get('estado') == 'inactivo':
+                                                <span class="status-badge status-inactivo">Inactivo</span>
+                                            $else:
+                                                <span class="status-badge status-pendiente">Pendiente</span>
+                                        </td>
+                                        <td>
+                                            <a href="/ver_paciente/$id" class="btn btn-sm btn-primary btn-action">
+                                                <i class="fas fa-folder-open"></i> Ver
+                                            </a>
+                                            <a href="/editar_paciente/$id" class="btn btn-sm btn-success btn-action">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                        </td>
+                                    </tr>
+                            $else:
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <i class="fas fa-info-circle me-2"></i> No hay pacientes registrados
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div>
-                        <span class="text-muted">Mostrando 1-5 de 25 pacientes</span>
+                        <span class="text-muted">
+                            $if datos:
+                                Mostrando ${len(datos)} paciente(s)
+                            $else:
+                                No hay pacientes registrados
+                        </span>
                     </div>
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    $if datos and len(datos) > 10:
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                 </div>
             </div>
         </div>
     </div>
     
     <!-- Botón flotante para agregar paciente en móvil -->
-    <button class="btn btn-primary btn-float d-md-none">
+    <a href="/agregar_paciente" class="btn btn-primary btn-float d-md-none">
         <i class="fas fa-plus"></i>
-    </button>
+    </a>
     
     <!-- Bootstrap JS y Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -434,9 +393,12 @@ $def with (datos)
             const sidebar = document.getElementById('sidebar-wrapper');
             const content = document.getElementById('page-content-wrapper');
             
-            btnFloat.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                content.classList.toggle('active');
+            btnFloat.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    sidebar.classList.toggle('active');
+                    content.classList.toggle('active');
+                }
             });
             
             // Toggle de la sección de búsqueda

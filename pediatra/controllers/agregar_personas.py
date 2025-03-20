@@ -1,26 +1,51 @@
 import web
-from models.pediatras import Personas  
+from models.pediatras import Personas, firebase
 
-render = web.template.render("views/")  
 
-class AgregarPersona:
+db = firebase.database()
+
+
+render = web.template.render("views/")
+
+class AgregarPaciente:
     def GET(self):
-        return render.agregar_personas()  
-
+        return render.agregar_personas()
+    
     def POST(self):
-        datos = web.input()
-        nombre = datos.get('nombre', '').strip()
-        edad = datos.get('edad', '').strip()
-
-        if not nombre or not edad:
-            return "Error: Todos los campos son obligatorios."
-
         try:
-            edad = int(edad)  
-            persona = Personas()  
-            persona.agregar_persona(nombre, edad)  
-            return web.seeother('/listar_personas')  
-        except ValueError:
-            return "Error: La edad debe ser un número válido."
+            datos = web.input()
+            
+            campos_obligatorios = [
+            "nombre", "primer_apellido", "segundo_apellido",
+             "edad", "genero", "telefono",
+            "nombre_madre", "direccion"
+
+            ]
+            
+            for campo in campos_obligatorios:
+                if campo not in datos or datos[campo].strip() == "":
+                    print(f"Campo faltante o vacío: {campo}")
+                    return "Error: Todos los campos son obligatorios."
+            
+            paciente = {
+                "nombre": datos.nombre,
+                "primer_apellido": datos.primer_apellido,
+                "segundo_apellido": datos.segundo_apellido,
+                "edad": datos.edad,
+                "genero": datos.genero,  
+                "telefono": datos.telefono,
+                "nombre_madre": datos.nombre_madre,
+                "nombre_padre": datos.get("nombre_padre", "No especificado"),
+                "direccion": datos.direccion,
+                "fecha_registro": db.generate_key()
+            }
+            
+            print("Datos del paciente a guardar:", paciente)
+        
+            resultado = db.child("pacientes").push(paciente)
+            print("Paciente guardado con éxito:", resultado)
+            raise web.seeother('/listapersonas')
+            
         except Exception as e:
-            return f"Error al agregar la persona: {str(e)}" 
+            print(f"Error al agregar paciente: {str(e)}")
+            return f"Error al agregar paciente: {str(e)}"
