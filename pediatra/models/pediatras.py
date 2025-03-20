@@ -36,6 +36,17 @@ def registrar_usuario(nombre, apellido1, apellido2, fecha_nacimiento, correo, li
         print(f"Error al registrar usuario: {str(e)}")
         return False
 
+def registrar_admin(nombre, apellido1, apellido2, telefono, correo, rango, password):
+        datos_admin = {
+            "nombre": nombre,
+            "apellido1": apellido1,
+            "apellido2": apellido2,
+            "telefono": telefono,
+            "correo": correo,
+            "rango": rango,
+            
+        }
+
 
 def iniciar_sesion(correo, password):
     try:
