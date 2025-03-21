@@ -5,8 +5,16 @@ $def with (datos)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BabyChat - Ficha médica pediátrica</title>
+    <!-- Font Awesome para iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Your existing CSS remains the same */
+        /* Variables globales */
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --sidebar-width: 250px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -19,59 +27,60 @@ $def with (datos)
             background-color: #f5f8fb;
         }
         
-        /* Sidebar izquierdo */
-        .sidebar {
-            width: 120px;
-            height: 100vh;
-            background-color: #f0f5fa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
+        /* Sidebar */
+        #sidebar-wrapper {
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            background: var(--primary-color);
+            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
             position: fixed;
-            left: 0;
-            top: 0;
+            z-index: 999;
+            transition: all 0.3s;
         }
         
-        .logo {
-            font-weight: bold;
-            margin-bottom: 40px;
-            font-size: 18px;
+        #sidebar-wrapper .sidebar-heading {
+            padding: 1.5rem 1rem;
+            font-size: 1.5rem;
+            color: white;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .menu-item {
-            width: 50px;
-            height: 50px;
-            background-color: #e8eef3;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            cursor: pointer;
+        #sidebar-wrapper .list-group {
+            width: var(--sidebar-width);
         }
         
-        .menu-item.active {
-            background-color: #e0e6ee;
+        #sidebar-wrapper .list-group-item {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
         }
         
-        .icon {
-            color: #aab5c0;
-            font-size: 20px;
+        #sidebar-wrapper .list-group-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
         
-        .section-title {
-            font-size: 12px;
-            color: #aab5c0;
-            margin-top: 10px;
-            margin-bottom: 20px;
+        #sidebar-wrapper .list-group-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        
+        #sidebar-wrapper .list-group-item i {
+            margin-right: 0.5rem;
         }
         
         /* Contenido principal */
         .main-content {
-            margin-left: 120px;
+            margin-left: var(--sidebar-width);
             padding: 20px;
-            width: calc(100% - 120px);
+            width: calc(100% - var(--sidebar-width));
         }
         
         /* Tarjeta de perfil */
@@ -277,22 +286,49 @@ $def with (datos)
             background-color: #e74c3c;
             color: white;
         }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: -var(--sidebar-width);
+            }
+            
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            #sidebar-wrapper.active {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: var(--sidebar-width);
+                width: calc(100% - var(--sidebar-width));
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar izquierdo -->
-    <div class="sidebar">
-        <div class="logo">BabyChat</div>
-        <div class="section-title">Principal</div>
-        <div class="menu-item active">
-            <div class="icon">🏠</div>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <div class="sidebar-heading">
+            <i class="fas fa-heartbeat"></i> BabyChat
         </div>
-        <div class="menu-item">
-            <div class="icon">💉</div>
-        </div>
-        <div class="menu-item">
-            <div class="icon">👨‍👩‍👧</div>
+        <div class="list-group">
+            <a href="/lista_personas" class="list-group-item active">
+                <i class="fas fa-user-md"></i> Pacientes
+            </a>
+            <a href="/estadisticas" class="list-group-item">
+                <i class="fas fa-chart-line"></i> Estadísticas
+            </a>
+            <a href="/configuracion" class="list-group-item">
+                <i class="fas fa-cog"></i> Configuración
+            </a>
+            <a href="/logout" class="list-group-item">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
         </div>
     </div>
     
@@ -310,7 +346,7 @@ $def with (datos)
                 </h2>
                 <div class="date">
                     $for id, paciente in datos.items():
-                    <span class="date-icon">📅$paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')</span>
+                    <span class="date-icon">📅 $paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')</span>
                     <span>
 
                         
@@ -318,21 +354,23 @@ $def with (datos)
                 </div>
                 <div class="date">
                     <span class="date-icon">⏱️</span>
-                    <span>Última visita:$paciente.get('ultima_visita', 'Ultima visita no registrada')</span>
+                    <span>Última visita: $paciente.get('ultima_visita', 'Ultima visita no registrada')</span>
                 </div>
             </div>
         </div>
         
         <!-- Navegación horizontal -->
         <div class="navigation">
-            <div class="nav-item active">Ficha médica básica</div>
-            <div class="nav-item">Antecedentes</div>
-            <div class="nav-item">Documentación</div>
+            <div class="nav-item active" id="tab-ficha">Ficha médica básica</div>
+            <div class="nav-item" id="tab-antecedentes">Antecedentes</div>
+            <div class="nav-item" id="tab-documentacion">Documentación</div>
         </div>
         
         <!-- Sección: Ficha médica básica -->
         <div class="section-container">
-            <div class="form-row">
+            <form method="post" action="/actualizar_paciente">
+        
+            <div class="form-row" id="seccion-ficha">
                 <div class="form-column">
                     <h3 class="section-header">Datos de Identificación</h3>
                     
@@ -343,52 +381,52 @@ $def with (datos)
                     
                     <div class="form-group">
                         <div class="form-label">Primer apellido</div>
-                        <input type="text" class="form-input"  value="$paciente.get('primer_apellido', 'N/A')" name="primer_apellido">
+                        <input type="text" class="form-input"  value="$paciente.get('apellido1', 'N/A')" name="apellido1">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Segundo apellido</div>
-                        <input type="text" class="form-input" name="segundo_apellido" >
+                        <input type="text" class="form-input" value="$paciente.get('apellido2', 'N/A')" name="apellido2">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Fecha de nacimiento</div>
-                        <input type="text" class="form-input"  name="fecha_nacimiento">
+                        <input type="text" class="form-input"  value="$paciente.get('fecha_nacimiento', 'N/A')" name="fecha_nacimiento">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Edad</div>
-                        <input type="text" class="form-input" name="edad" readonly>
+                        <input type="text" class="form-input" value="$paciente.get('edad', 'N/A')" name="edad" readonly>
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Género</div>
-                        <input type="text" class="form-input"  name="genero">
+                        <input type="text" class="form-input" value="$paciente.get('genero', 'N/A')" name="genero">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">CURP</div>
-                        <input type="text" class="form-input"  name="curp">
+                        <input type="text" class="form-input"  value="$paciente.get('curp', 'N/A')" name="curp">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Nombre de la madre</div>
-                        <input type="text" class="form-input" name="nombre_madre">
+                        <input type="text" class="form-input" value="$paciente.get('nombre_madre', 'N/A')" name="nombre_madre">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Nombre del padre o tutor</div>
-                        <input type="text" class="form-input"  name="nombre_padre">
+                        <input type="text" class="form-input" value="$paciente.get('nombre_padre', 'N/A')" name="nombre_padre">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Teléfono de contacto</div>
-                        <input type="text" class="form-input" name="telefono">
+                        <input type="text" class="form-input" value="$paciente.get('telefono', 'N/A')" name="telefono">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Dirección</div>
-                        <input type="text" class="form-input" name="direccion">
+                        <input type="text" class="form-input" value="$paciente.get('direccion', 'N/A')" name="direccion">
                     </div>
                 </div>
                 
@@ -397,26 +435,26 @@ $def with (datos)
                     
                     <div class="form-group">
                         <div class="form-label">Peso actual</div>
-                        <input type="text" class="form-input" placeholder="Kg" name="peso">
+                        <input type="text" class="form-input" placeholder="Kg" value="$paciente.get('peso', 'N/A')" name="peso">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Talla actual</div>
-                        <input type="text" class="form-input" placeholder="cm" name="talla">
+                        <input type="text" class="form-input" placeholder="cm" value="$paciente.get('talla', 'N/A')" name="talla">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Perímetro cefálico</div>
-                        <input type="text" class="form-input" placeholder="cm" name="perimetro_cefalico">
+                        <input type="text" class="form-input" placeholder="cm" value="$paciente.get('perimetro_cefalico', 'N/A')" name="perimetro_cefalico">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Grupo sanguíneo</div>
-                        <input type="text" class="form-input"  name="grupo_sanguineo">
+                        <input type="text" class="form-input" value="$paciente.get('grupo_sanguineo', 'N/A')" name="grupo_sanguineo">
                     </div>
                     
                     <!-- Campo oculto para almacenar el pediatra asignado -->
-                    <input type="hidden" name="pediatra" >
+                    <input type="hidden" name="pediatra">
                     
                     <div class="logo-box">
                         <div class="logo-text">BabyChat</div>
@@ -425,7 +463,7 @@ $def with (datos)
             </div>
             
             <!-- Sección: Antecedentes (invisible por defecto) -->
-            <div class="additional-section" style="display: none;">
+            <div class="additional-section" id="seccion-antecedentes" style="display: none;">
                 <h3 class="section-header">Antecedentes</h3>
                 <div class="form-row">
                     <div class="form-column">
@@ -455,7 +493,7 @@ $def with (datos)
             </div>
             
             <!-- Sección: Documentación (invisible por defecto) -->
-            <div class="additional-section" style="display: none;">
+            <div class="additional-section" id="seccion-documentacion" style="display: none;">
                 <h3 class="section-header">Documentación</h3>
                 <div class="form-row">
                     <div class="form-column">
@@ -491,13 +529,104 @@ $def with (datos)
                     </div>
                 </div>
             </div>
-            
+        </form>
             <div class="actions">
-                <button class="action-btn delete-btn" id="delete-btn" >Eliminar paciente</button>
-                <button class="action-btn save-btn" id="save-btn" >Guardar cambios</button>
+                <button class="action-btn delete-btn" id="delete-btn">Eliminar paciente</button>
+                <button class="action-btn save-btn" id="save-btn">Guardar cambios</button>
             </div>
         </div>
     </div>
+
+    <!-- Script para la navegación entre pestañas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a los elementos de las pestañas
+            const tabFicha = document.getElementById('tab-ficha');
+            const tabAntecedentes = document.getElementById('tab-antecedentes');
+            const tabDocumentacion = document.getElementById('tab-documentacion');
+            
+            // Referencias a las secciones
+            const seccionFicha = document.getElementById('seccion-ficha');
+            const seccionAntecedentes = document.getElementById('seccion-antecedentes');
+            const seccionDocumentacion = document.getElementById('seccion-documentacion');
+            
+            // Función para mostrar una sección y ocultar las demás
+            function mostrarSeccion(seccion) {
+                seccionFicha.style.display = 'none';
+                seccionAntecedentes.style.display = 'none';
+                seccionDocumentacion.style.display = 'none';
+                
+                // Quitar la clase active de todas las pestañas
+                tabFicha.classList.remove('active');
+                tabAntecedentes.classList.remove('active');
+                tabDocumentacion.classList.remove('active');
+                
+                // Mostrar la sección seleccionada
+                seccion.style.display = 'flex';
+            }
+            
+            // Eventos de clic para las pestañas
+            tabFicha.addEventListener('click', function() {
+                mostrarSeccion(seccionFicha);
+                tabFicha.classList.add('active');
+            });
+            
+            tabAntecedentes.addEventListener('click', function() {
+                mostrarSeccion(seccionAntecedentes);
+                tabAntecedentes.classList.add('active');
+            });
+            
+            tabDocumentacion.addEventListener('click', function() {
+                mostrarSeccion(seccionDocumentacion);
+                tabDocumentacion.classList.add('active');
+            });
+            
+            // Toggle sidebar en móvil
+            const sidebar = document.getElementById('sidebar-wrapper');
+            const content = document.querySelector('.main-content');
+            
+            // Agregar un botón hamburguesa para móviles
+            const hamburgerBtn = document.createElement('button');
+            hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            hamburgerBtn.classList.add('hamburger-btn');
+            hamburgerBtn.style.position = 'fixed';
+            hamburgerBtn.style.top = '10px';
+            hamburgerBtn.style.left = '10px';
+            hamburgerBtn.style.zIndex = '1000';
+            hamburgerBtn.style.display = 'none';
+            hamburgerBtn.style.padding = '5px 10px';
+            hamburgerBtn.style.background = '#4e73df';
+            hamburgerBtn.style.color = 'white';
+            hamburgerBtn.style.border = 'none';
+            hamburgerBtn.style.borderRadius = '5px';
+            
+            document.body.appendChild(hamburgerBtn);
+            
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 768) {
+                    hamburgerBtn.style.display = 'block';
+                } else {
+                    hamburgerBtn.style.display = 'none';
+                }
+            });
+            
+            // Ejecutar una vez al cargar para configurar correctamente
+            if (window.innerWidth <= 768) {
+                hamburgerBtn.style.display = 'block';
+            }
+            
+            hamburgerBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                content.classList.toggle('active');
+            });
+
+            document.getElementById('save-btn').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevenir comportamiento por defecto
+                // Código para validar y enviar el formulario
+                document.querySelector('form').submit();
+            });
+        });
+    </script>
 
 </body>
 </html>
