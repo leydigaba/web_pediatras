@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import web
 from controllers.index import Index  
 from controllers.registro import Registro as Registro

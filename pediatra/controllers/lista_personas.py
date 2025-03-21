@@ -11,11 +11,12 @@ class ListaPersonas:
                 print("🚫 No hay usuario en sesión. Redirigiendo a /iniciosesion...")
                 raise web.seeother('/iniciosesion')  # Redirige a la página de inicio de sesión
             
-            
             print(f"🔍 Sesión actual: {session.get('usuario')}")
-
+ 
             p = Personas()  
-            pacientes = p.lista_pacientes()  
+            correo_pediatra = session.get('usuario').get('correo')
+            # Filtrar pacientes por el pediatra
+            pacientes = p.lista_pacientes(correo_pediatra) 
 
             # Procesamos los datos para asegurarnos de que tengan las propiedades necesarias
             for id, paciente in pacientes.items():

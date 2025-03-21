@@ -328,11 +328,12 @@ $def with (datos)
                                                 <span class="status-badge status-pendiente">Pendiente</span>
                                         </td>
                                         <td>
-                                            <a href="/usuario/(.+)" class="btn btn-info btn-sm">Detalle</a>
-                                            <a href="/editar_paciente/{{ paciente_id }}" class="btn btn-sm btn-success btn-action">
+                                            <a href="https://8080-leydigaba-webpediatras-h6b1ofeeknb.ws-us118.gitpod.io/usuario/$id" class="btn btn-info btn-sm">Detalle</a>
+                                            <a href="/editar_paciente/$id" class="btn btn-sm btn-success btn-action">
                                                 <i class="fas fa-edit"></i> Editar
                                             </a>
                                         </td>
+                                    </tr>
                             $else:
                                 <tr>
                                     <td colspan="7" class="text-center py-4">

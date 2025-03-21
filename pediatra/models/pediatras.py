@@ -71,6 +71,7 @@ class Personas:
             return {}
     
     def agregar_persona(self, nombre, edad):
+        """Método existente para agregar personas simples"""
         try:
             persona = {
                 "nombre": nombre,
@@ -82,16 +83,61 @@ class Personas:
             print(f"Error al agregar persona: {str(e)}")
             return False
 
-    def lista_pacientes(self):
-        
+    def lista_pacientes(self, pediatra_email=None):
+        """Método para listar pacientes, opcionalmente filtrando por pediatra"""
         try:
             datos = self.db.child("pacientes").get()
-            print("Datos de pacientes:", datos.val())  
-            return datos.val() if datos.val() else {}
+            todos_pacientes = datos.val() if datos.val() else {}
+            
+            # Si no se especifica pediatra, devolver todos los pacientes
+            if not pediatra_email:
+                return todos_pacientes
+            
+            # Filtrar pacientes que tienen el pediatra especificado
+            pacientes_filtrados = {}
+            for id, paciente in todos_pacientes.items():
+                if paciente.get('pediatra') == pediatra_email:
+                    pacientes_filtrados[id] = paciente
+                    
+            print(f"Pacientes filtrados para pediatra {pediatra_email}: {len(pacientes_filtrados)}")
+            return pacientes_filtrados
+                
         except Exception as e:
             print(f"Error al listar pacientes: {str(e)}")
             return {}
-    
+
+    def lista_pacientes_por_id_y_pediatra(self, paciente_id=None, pediatra_email=None):
+        """Método para listar pacientes, filtrando por ID y opcionalmente por pediatra"""
+        try:
+            datos = self.db.child("pacientes").get()
+            todos_pacientes = datos.val() if datos.val() else {}
+            
+            # Si no se especifican filtros, devolver todos los pacientes
+            if not paciente_id and not pediatra_email:
+                return todos_pacientes
+            
+            pacientes_filtrados = {}
+            
+            for id, paciente in todos_pacientes.items():
+                # Filtrar por ID si se proporciona
+                if paciente_id and id != paciente_id:
+                    continue
+                
+                # Filtrar por pediatra si se proporciona
+                if pediatra_email and paciente.get('pediatra') != pediatra_email:
+                    continue
+                
+                pacientes_filtrados[id] = paciente
+            
+            print(f"Pacientes filtrados con ID {paciente_id} y pediatra {pediatra_email}: {len(pacientes_filtrados)}")
+            return pacientes_filtrados
+                
+        except Exception as e:
+            print(f"Error al listar pacientes: {str(e)}")
+            return {}
+
+
+
     def agregar_paciente(self, datos_paciente):
         """Método para agregar un paciente completo con todos sus datos"""
         try:
@@ -100,11 +146,3 @@ class Personas:
         except Exception as e:
             print(f"Error al agregar paciente: {str(e)}")
             return False
-
-    def obtener_usuario(self, usuario_id):
-        try:
-            usuario = self.db.child("usuarios").child(usuario_id).get().val()
-            return usuario
-        except Exception as e:
-            print(f"Error al obtener usuario: {str(e)}")
-            return None
