@@ -67,6 +67,12 @@ class DetalleUsuario:
                     'perimetro_cefalico': datos.get('perimetro_cefalico'),
                     'grupo_sanguineo': datos.get('grupo_sanguineo'),
                     'antecedente_neonatal': datos.get('antecedente_neonatal'),
+                    'edad_neonatal_semanas': datos.get('edad_neonatal_semanas'),
+                    'edad_neonatal_dias': datos.get('edad_neonatal_dias'),
+                    'peso_datos': datos.get('peso_datos'),
+                    'talla_datos': datos.get('talla_datos'),
+                    'patologias': datos.get('patologias'),
+                    'alergias': datos.get('alergias')
                 }
                 
                 # Filtrar campos vacíos

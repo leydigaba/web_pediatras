@@ -482,56 +482,56 @@ $def with (datos)
                 <div class="form-row">
                     <div class="form-column">
                         <h3 class="section-header">Antecedentes neonatales</h3>
-                        <div class="form-group">
-                            <div class="form-label">¿Tiene antecedentes neonatales?</div>
-                            <div class="radio-group">
-                                <label><input type="radio" value="$paciente.get('antecedente_neonatal', 'si')"  name="antecedente_neonatal" > Sí</label>
-                                
-                                <label><input type="radio"  value="$paciente.get('antecedente_neonatal', 'no')"  name="antecedente_neonatal" value="no"> No</label>
-                            </div>
-                        </div>
+                        <label>
+                            <input type="radio" name="antecedente_neonatal" value="si" 
+                                {% if paciente.get('antecedente_neonatal') == 'si' %} checked {% endif %}> Sí
+                        </label>
                         
+                        <label>
+                            <input type="radio" name="antecedente_neonatal" value="no" 
+                                {% if paciente.get('antecedente_neonatal') == 'no' %} checked {% endif %}> No
+                        </label>
                         <h3 class="section-header">Edad neonatal</h3>
                         <div class="form-group">
                             <div class="form-label">Semanas</div>
-                            <input type="number" class="form-input" name="edad_neonatal_semanas" min="0">
+                            <input type="number" class="form-input"  value="$paciente.get('edad_neonatal_semanas', '0')" name="edad_neonatal_semanas" min="0">
                         </div>
                         <div class="form-group">
                             <div class="form-label">Días</div>
-                            <input type="number" class="form-input" name="edad_neonatal_dias" min="0">
+                            <input type="number" class="form-input" value="$paciente.get('edad_neonatal_dias', '0')"  name="edad_neonatal_dias" min="0">
                         </div>
                         
                         <h3 class="section-header">Datos antropométricos</h3>
                         <div class="form-group">
                             <div class="form-label">Peso</div>
-                            <input type="number" class="form-input" name="peso" step="0.01">
+                            <input type="number" class="form-input" value="$paciente.get('peso_datos', 0)" name="peso_datos" step="0.01" min="0">
                         </div>
                         <div class="form-group">
                             <div class="form-label">Talla</div>
-                            <input type="number" class="form-input" name="talla" step="0.01">
+                            <input type="number" class="form-input" value="$paciente.get('talla_datos', 0)" name="talla_datos" step="0.01" min="0">
                         </div>
                         
                         <h3 class="section-header">Antecedentes familiares patológicos</h3>
                         <div class="section">
                             <label>Patologías</label>
                             <div class="radio-group">
-                                <input type="radio" name="patologias" value="si"> Sí
-                                <input type="radio" name="patologias" value="no"> No
+                                <input type="radio"  value="$paciente.get('patologias_si', 0)" name="patologias" > Sí
+                                <input type="radio" value="$paciente.get('patologias_si', 0)"   name="patologias" > No
                             </div>
                         </div>
                         <div class="section">
                             <label>Alergias</label>
                             <div class="radio-group">
-                                <input type="radio" name="alergias" value="si" onclick="toggleInput(true)"> Sí
-                                <input type="radio" name="alergias" value="no" onclick="toggleInput(false)"> No
+                                <input type="radio" value="$paciente.get('alergias_si', 0)"  name="alergias"" onclick="toggleInput(true)"> Sí
+                                <input type="radio" value="$paciente.get('alergias_no', 0)"  name="alergias" onclick="toggleInput(false)"> No
                             </div>
                         </div>
 
                         <div class="section">
                             <label>Cirugías o hospitalización</label>
                             <div class="radio-group">
-                                <input type="radio" name="cirugias" value="si"> Sí
-                                <input type="radio" name="cirugias" value="no"> No
+                                <input type="radio" value="$paciente.get('cirugias_si', 0)"  name="cirugias" > Sí
+                                <input type="radio" value="$paciente.get('cirugias_no', 0)" name="cirugias" > No
                             </div>
                         </div>
 
