@@ -36,5 +36,6 @@ pip freeze > requirements.txt
 ```bash
 git add .
 git commit -m "Primer commit"
-git push -u origizn main
+git push -u origin main
+
 ```
