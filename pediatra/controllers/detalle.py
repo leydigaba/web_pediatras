@@ -65,7 +65,8 @@ class DetalleUsuario:
                     'peso': datos.get('peso'),
                     'talla': datos.get('talla'),
                     'perimetro_cefalico': datos.get('perimetro_cefalico'),
-                    'grupo_sanguineo': datos.get('grupo_sanguineo')
+                    'grupo_sanguineo': datos.get('grupo_sanguineo'),
+                    'antecedente_neonatal': datos.get('antecedente_neonatal'),
                 }
                 
                 # Filtrar campos vacíos
