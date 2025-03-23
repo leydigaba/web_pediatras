@@ -14,6 +14,7 @@ db = firebase.database()
 auth = firebase.auth()
 
 
+
 def registrar_usuario(nombre, apellido1, apellido2, fecha_nacimiento, correo, licencia, password):
     try:
         user = auth.create_user_with_email_and_password(correo, password)  # ¡Firebase maneja la seguridad!
@@ -135,6 +136,15 @@ class Personas:
         except Exception as e:
             print(f"Error al listar pacientes: {str(e)}")
             return {}
+
+    def actualizar_paciente(self, paciente_id, datos_actualizar):
+        try:
+            self.db.child("pacientes").child(paciente_id).update(datos_actualizar)
+            print(f"Datos actualizados para el paciente {paciente_id}: {datos_actualizar}")
+            return True
+        except Exception as e:
+            print(f"Error al actualizar paciente: {str(e)}")
+            return False
 
 
 

@@ -306,6 +306,19 @@ $def with (datos)
                 margin-left: var(--sidebar-width);
                 width: calc(100% - var(--sidebar-width));
             }
+            .input-group {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem; /* Espaciado entre elementos */
+                width: 400px; /* Ancho */
+                height: 50px; /* Alto */
+                position: absolute; /* Posicionamiento */
+                top: 500px; /* Distancia desde la parte superior */
+                left: 100px; /* Distancia desde la izquierda */
+                background-color: #224abe; /* Color de fondo opcional */
+                padding: 10px; /* Espaciado interno */
+                border-radius: 5px; /* Bordes redondeados */
+            }
         }
     </style>
 </head>
@@ -368,8 +381,7 @@ $def with (datos)
         
         <!-- Sección: Ficha médica básica -->
         <div class="section-container">
-            <form method="post" action="/actualizar_paciente">
-        
+        <form method="post" action="">
             <div class="form-row" id="seccion-ficha">
                 <div class="form-column">
                     <h3 class="section-header">Datos de Identificación</h3>
@@ -381,12 +393,12 @@ $def with (datos)
                     
                     <div class="form-group">
                         <div class="form-label">Primer apellido</div>
-                        <input type="text" class="form-input"  value="$paciente.get('apellido1', 'N/A')" name="apellido1">
+                        <input type="text" class="form-input"  value="$paciente.get('primer_apellido', 'N/A')" name="apellido1">
                     </div>
                     
                     <div class="form-group">
                         <div class="form-label">Segundo apellido</div>
-                        <input type="text" class="form-input" value="$paciente.get('apellido2', 'N/A')" name="apellido2">
+                        <input type="text" class="form-input" value="$paciente.get('segundo_apellido', 'N/A')" name="apellido2">
                     </div>
                     
                     <div class="form-group">
@@ -396,7 +408,7 @@ $def with (datos)
                     
                     <div class="form-group">
                         <div class="form-label">Edad</div>
-                        <input type="text" class="form-input" value="$paciente.get('edad', 'N/A')" name="edad" readonly>
+                        <input type="text" class="form-input" value="$paciente.get('edad', 'N/A')" name="edad" >
                     </div>
                     
                     <div class="form-group">
@@ -461,37 +473,70 @@ $def with (datos)
                     </div>
                 </div>
             </div>
-            
-            <!-- Sección: Antecedentes (invisible por defecto) -->
-            <div class="additional-section" id="seccion-antecedentes" style="display: none;">
-                <h3 class="section-header">Antecedentes</h3>
-                <div class="form-row">
-                    <div class="form-column">
-                        <div class="form-group">
-                            <div class="form-label">Antecedentes familiares</div>
-                            <textarea class="form-input" rows="3" name="antecedentes_familiares"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <div class="form-label">Alergias conocidas</div>
-                            <textarea class="form-input" rows="2" name="alergias"></textarea>
-                        </div>
+
+            <div class="section-container">
+                <form method="post" action="">
+                    <div class="form-row" id="seccion-ficha">
+                        <div class="form-column">
+                            <h3 class="section-header">Antecedentes neonatales</h3>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="neonatal" value="si"> Sí</label>
+                                    <label><input type="radio" name="neonatal" value="no"> No</label>
+                                </div>
+                            </div>
+                        </div>  
                     </div>
-                    
-                    <div class="form-column">
-                        <div class="form-group">
-                            <div class="form-label">Enfermedades previas</div>
-                            <textarea class="form-input" rows="3" name="enfermedades_previas"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <div class="form-label">Medicamentos actuales</div>
-                            <textarea class="form-input" rows="2" name="medicamentos"></textarea>
-                        </div>
+
+                    <div class="form-row" id="seccion-ficha">
+                        <div class="form-column">
+                            <h3 class="section-header">Edad neonatal</h3>
+                                <div class="radio-group">
+                                    <label><input type="number" class="form-input" name="edad_neonatal_semanas" min="0"> Semanas </label>
+                                    <label><input type="number" class="form-input" name="edad_neonatal_dias" min="0"> Días
+                                </div>
+                            </div>
+                        </div>  
                     </div>
-                </div>
-            </div>
-            
+                        
+                    <div class="form-row" id="seccion-ficha">
+                        <div class="form-column">
+                            <h3 class="section-header">Datos antropométricos</h3>
+                                <div class="form-label">Peso</div>
+                                    <label><input type="number" class="form-input" name="peso" step="0.01">
+                                </div>
+                            </div>
+                        <div class="form-column">
+                            <div class="form-label">Talla</div>
+                                    <label><input type="number" class="form-input" name="talla" step="0.01">
+                                </div>
+                        
+                                <h4 class="subsection-header">Clasificación del recién nacido</h4>
+                                <div class="form-row">
+                                    <div class="form-column">
+                                        <div class="form-group">
+                                            <div class="form-label">Según edad gestacional</div>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="edad_gestacional" value="termino"> Término</label>
+                                                <label><input type="radio" name="edad_gestacional" value="pretermino"> Pretérmino</label>
+                                                <label><input type="radio" name="edad_gestacional" value="postermino"> Postérmino</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-column">
+                                        <div class="form-group">
+                                            <div class="form-label">Según peso</div>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="clasificacion_peso" value="buen_peso"> Buen peso</label>
+                                                <label><input type="radio" name="clasificacion_peso" value="bajo"> Bajo</label>
+                                                <label><input type="radio" name="clasificacion_peso" value="adecuado"> Adecuado</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                </form> 
+                            
+
             <!-- Sección: Documentación (invisible por defecto) -->
             <div class="additional-section" id="seccion-documentacion" style="display: none;">
                 <h3 class="section-header">Documentación</h3>
