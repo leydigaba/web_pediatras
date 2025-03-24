@@ -34,8 +34,7 @@ pip freeze > requirements.txt
 ## 10. Guardar
 
 ```bash
-git add .
-git commit -m "Primer commit"
+git add .cd rimer commit"
 git push -u origin main
 
 ```

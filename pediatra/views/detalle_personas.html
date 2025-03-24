@@ -224,6 +224,11 @@ $def with (datos)
             color: white;
         }
         
+        .cancel-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
         /* Logo */
         .logo-box {
             display: flex;
@@ -240,11 +245,26 @@ $def with (datos)
             letter-spacing: 2px;
         }
         
-        /* Secciones adicionales (Antecedentes y Documentación) */
-        .additional-section {
-            margin-top: 20px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
+        /* Radio buttons */
+        .radio-group {
+            margin-bottom: 15px;
+        }
+        
+        .radio-group label {
+            margin-right: 15px;
+        }
+        
+        /* Document links */
+        .view-document {
+            display: inline-block;
+            margin-left: 10px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .document-preview {
+            margin-top: 10px;
+            display: none;
         }
         
         /* Botón de volver a la lista */
@@ -291,7 +311,7 @@ $def with (datos)
         <div class="list-group">
             <a href="/listapersonas" class="list-group-item active">
                 <i class="fas fa-user-md"></i> Pacientes
-            </a>
+            </a>
             <a href="/estadisticas" class="list-group-item">
                 <i class="fas fa-chart-line"></i> Estadísticas
             </a>
@@ -319,9 +339,7 @@ $def with (datos)
                 <div class="date">
                     $for id, paciente in datos.items():
                     <span class="date-icon">📅 $paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')</span>
-                    <span>
-
-                        
+                    <span>                        
                     </span>
                 </div>
                 <div class="date">
@@ -337,6 +355,8 @@ $def with (datos)
             <div class="nav-item" id="tab-antecedentes">Antecedentes</div>
             <div class="nav-item" id="tab-documentacion">Documentación</div>
         </div>
+        
+        <!-- Sección: Ficha médica básica -->
         <div class="section-container" id="seccion-ficha">
             <form method="post" action="">
                 <div class="form-row">
@@ -438,83 +458,115 @@ $def with (datos)
             </form>
         </div>
         
-        <div class="section-container" id="seccion-antecedentes">
+        <!-- Sección: Antecedentes -->
+        <div class="section-container" id="seccion-antecedentes" style="display: none;">
             <form method="post" action="">
                 <div class="form-row">
                     <div class="form-column">
                         <h3 class="section-header">Antecedentes neonatales</h3>
-                        <label>
-                            <input type="radio" name="antecedente_neonatal" value="si" 
-                                {% if paciente.get('antecedente_neonatal') == 'si' %} checked {% endif %}> Sí
-                        </label>
-                        <label>
-                            <input type="radio" name="antecedente_neonatal" value="no" 
-                                {% if paciente.get('antecedente_neonatal') == 'no' %} checked {% endif %}> No
-                        </label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="antecedente_neonatal_si" 
+                                       $if paciente.get('antecedente_neonatal_si') == 'si': checked>
+                                Sí
+                            </label>
+                            <label>
+                                <input type="radio" name="antecedente_neonatal_no"
+                                       $if paciente.get('antecedente_neonatal_no') == 'no': checked>
+                                No
+                            </label>
+                        </div>
                         
                         <h3 class="section-header">Edad neonatal</h3>
                         <div class="form-group">
                             <div class="form-label">Semanas</div>
-                            <input type="number" class="form-input" name="edad_neonatal_semanas" 
-                                value="{{ paciente.get('edad_neonatal_semanas', 0) }}" min="0">
+                            <input type="number" value="$paciente.get('edad_neonatal_semanas', 'N/A')" name="antecedente_neonatal"  class="form-input" name="edad_neonatal_semanas" min="0">
                         </div>
                         <div class="form-group">
                             <div class="form-label">Días</div>
-                            <input type="number" class="form-input" name="edad_neonatal_dias" 
-                                value="{{ paciente.get('edad_neonatal_dias', 0) }}" min="0">
+                            <input type="number" value="$paciente.get('edad_neonatal_dias', 'N/A')" class="form-input" name="edad_neonatal_dias" min="0">
                         </div>
                         
                         <h3 class="section-header">Datos antropométricos</h3>
                         <div class="form-group">
                             <div class="form-label">Peso</div>
-                            <input type="number" class="form-input" name="peso_datos" 
-                                value="{{ paciente.get('peso_datos', 0) }}" step="0.01" min="0">
+                            <input type="number" value="$paciente.get('peso_datos', 'N/A')" class="form-input" name="peso_datos" step="0.01" min="0">
                         </div>
                         <div class="form-group">
                             <div class="form-label">Talla</div>
-                            <input type="number" class="form-input" name="talla_datos" 
-                                value="{{ paciente.get('talla_datos', 0) }}" step="0.01" min="0">
+                            <input type="number"  value="$paciente.get('talla_datos', 'N/A')" class="form-input" name="talla_datos" step="0.01" min="0">
                         </div>
                         
                         <h3 class="section-header">Antecedentes familiares patológicos</h3>
-                        <div class="section">
+                        <div class="radio-group">
                             <label>Patologías</label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="patologias" value="si" {% if paciente.get('patologias') == 'si' %} checked {% endif %}> Sí</label>
-                                <label><input type="radio" name="patologias" value="no" {% if paciente.get('patologias') == 'no' %} checked {% endif %}> No</label>
-                            </div>
+                            <label>
+                                <input type="radio" name="patologias" value="si" 
+                                       $if paciente.get('patologias') == 'si': checked>
+                                Sí
+                            </label>
+                            <label>
+                                <input type="radio" name="patologias" value="no" 
+                                       $if paciente.get('patologias') == 'no': checked>
+                                No
+                            </label>
                         </div>
                         
                         <h3 class="section-header">Datos de la Madre</h3>
                         <div class="form-group">
-                            <label for="gestas">Gestas:</label>
-                            <input type="number" class="form-input" id="gestas" name="gestas" min="0" value="{{ paciente.get('gestas', 0) }}">
+                            <div class="form-label">Gestas:</div>
+                            <input type="number" value="$paciente.get('gestas', 'N/A')" class="form-input" name="gestas" min="0">
                         </div>
                         <div class="form-group">
-                            <label for="abortos">Abortos:</label>
-                            <input type="number" class="form-input" id="abortos" name="abortos" min="0" value="{{ paciente.get('abortos', 0) }}">
+                            <div class="form-label">Abortos:</div>
+                            <input type="number" value="$paciente.get('abortos', 'N/A')" class="form-input" name="abortos" min="0">
                         </div>
                         <div class="form-group">
-                            <label for="partos">Partos:</label>
-                            <input type="number" class="form-input" id="partos" name="partos" min="0" value="{{ paciente.get('partos', 0) }}">
+                            <div class="form-label">Partos:</div>
+                            <input type="number"  value="$paciente.get('partos', 'N/A')" class="form-input" name="partos" min="0">
                         </div>
                         <div class="form-group">
-                            <label for="cesareas">Cesáreas:</label>
-                            <input type="number" class="form-input" id="cesareas" name="cesareas" min="0" value="{{ paciente.get('cesareas', 0) }}">
+                            <div class="form-label">Cesáreas:</div>
+                            <input type="number" value="$paciente.get('cesareas', 'N/A')" class="form-input" name="cesareas" min="0">
                         </div>
                         
                         <h3 class="section-header">Grado de Riesgo del Embarazo</h3>
                         <div class="radio-group">
-                            <label><input type="radio" name="riesgo" value="normal" {% if paciente.get('riesgo') == 'normal' %} checked {% endif %}> Normal</label>
-                            <label><input type="radio" name="riesgo" value="riesgo" {% if paciente.get('riesgo') == 'riesgo' %} checked {% endif %}> Riesgo</label>
-                            <label><input type="radio" name="riesgo" value="alto_riesgo" {% if paciente.get('riesgo') == 'alto_riesgo' %} checked {% endif %}> Alto Riesgo</label>
+                            <label>Condición de Riesgo</label>
+                            <label>
+                                <input type="radio" name="riesgo" value="normal" 
+                                       $if paciente.get('riesgo') == 'normal': checked>
+                                Normal
+                            </label>
+                            <label>
+                                <input type="radio" name="riesgo" value="riesgo" 
+                                       $if paciente.get('riesgo') == 'riesgo': checked>
+                                Riesgo
+                            </label>
+                            <label>
+                                <input type="radio" name="riesgo" value="alto_riesgo" 
+                                       $if paciente.get('riesgo') == 'alto_riesgo': checked>
+                                Alto Riesgo
+                            </label>
                         </div>
                         
                         <h3 class="section-header">Terminación del Parto</h3>
                         <div class="radio-group">
-                            <label><input type="radio" name="terminacion" value="espontaneo" {% if paciente.get('terminacion') == 'espontaneo' %} checked {% endif %}> Espontáneo</label>
-                            <label><input type="radio" name="terminacion" value="intraoperatoria" {% if paciente.get('terminacion') == 'intraoperatoria' %} checked {% endif %}> Intraoperatoria</label>
-                            <label><input type="radio" name="terminacion" value="electiva" {% if paciente.get('terminacion') == 'electiva' %} checked {% endif %}> Electiva</label>
+                            <label>
+                                <input type="radio" name="terminacion" value="espontaneo" 
+                                       $if paciente.get('terminacion') == 'espontaneo': checked>
+                                Espontáneo
+                            </label>
+                            <label>
+                                <input type="radio" name="terminacion" value="intraoperatoria" 
+                                       $if paciente.get('terminacion') == 'intraoperatoria': checked>
+                                Intraoperatoria
+                            </label>
+                            <label>
+                                <input type="radio" name="terminacion" value="electiva" 
+                                       $if paciente.get('terminacion') == 'electiva': checked>
+                                Electiva
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -527,36 +579,30 @@ $def with (datos)
         </div>
         
         <!-- Sección: Documentación -->
-        <div class="section-container" id="seccion-documentacion">
+        <div class="section-container" id="seccion-documentacion" style="display: none;">
             <h3 class="section-header">Documentación</h3>
             <form method="post" action="" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-column">
                         <div class="form-group">
-                            <label class="form-label">Carnet de vacunación</label>
+                            <div class="form-label">Carnet de vacunación</div>
                             <input type="file" class="form-input" name="carnet_vacunacion">
-                            <a href="#" class="view-document" id="ver_carnet_vacunacion">Ver documento</a>
-                            <div class="document-preview" id="preview_carnet_vacunacion"></div>
+                            <a href="#" class="view-document">Ver documento</a>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Resultados de laboratorio</label>
+                            <div class="form-label">Resultados de laboratorio</div>
                             <input type="file" class="form-input" name="resultados_laboratorio">
-                            <a href="#" class="view-document" id="ver_resultados_laboratorio">Ver documento</a>
-                            <div class="document-preview" id="preview_resultados_laboratorio"></div>
+                            <a href="#" class="view-document">Ver documento</a>
                         </div>
-                    </div>
-                    <div class="form-column">
                         <div class="form-group">
-                            <label class="form-label">Recetas médicas</label>
+                            <div class="form-label">Recetas médicas</div>
                             <input type="file" class="form-input" name="recetas_medicas">
-                            <a href="#" class="view-document" id="ver_recetas_medicas">Ver documento</a>
-                            <div class="document-preview" id="preview_recetas_medicas"></div>
+                            <a href="#" class="view-document">Ver documento</a>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Otros documentos</label>
+                            <div class="form-label">Otros documentos</div>
                             <input type="file" class="form-input" name="otros_documentos">
-                            <a href="#" class="view-document" id="ver_otros_documentos">Ver documento</a>
-                            <div class="document-preview" id="preview_otros_documentos"></div>
+                            <a href="#" class="view-document">Ver documento</a>
                         </div>
                     </div>
                 </div>
@@ -566,7 +612,7 @@ $def with (datos)
                 </div>
             </form>
         </div>
-        
+    </div>
     
     <!-- Script para la navegación entre pestañas -->
     <script>
@@ -612,6 +658,10 @@ $def with (datos)
                 tabDocumentacion.classList.add('active');
             });
             
+            // Por defecto, mostrar la primera pestaña
+            mostrarSeccion(seccionFicha);
+            tabFicha.classList.add('active');
+            
             // Toggle sidebar en móvil
             const sidebar = document.getElementById('sidebar-wrapper');
             const content = document.querySelector('.main-content');
@@ -650,15 +700,7 @@ $def with (datos)
                 sidebar.classList.toggle('active');
                 content.classList.toggle('active');
             });
-
-            document.getElementById('save-btn').addEventListener('click', function(e) {
-                e.preventDefault(); // Prevenir comportamiento por defecto
-                // Código para validar y enviar el formulario
-                document.querySelector('form').submit();
-            });
         });
-        
     </script>
-
 </body>
 </html>

@@ -178,6 +178,16 @@ class Personas:
             print(f"Error al actualizar pediatra: {str(e)}")
             return False
 
+    def actualizar_paciente(self, paciente_id, datos_actualizar):
+        try:
+            self.db.child("pacientes").child(paciente_id).update(datos_actualizar)
+            print(f"Datos actualizados para el paciente {paciente_id}: {datos_actualizar}")
+            return True
+        except Exception as e:
+            print(f"Error al actualizar paciente: {str(e)}")
+            return False
+
+
 
 class CambiarEstado:
     def POST(self, paciente_id):

@@ -62,13 +62,23 @@ class DetalleUsuario:
                     'talla': datos.get('talla'),
                     'perimetro_cefalico': datos.get('perimetro_cefalico'),
                     'grupo_sanguineo': datos.get('grupo_sanguineo'),
-                    'antecedente_neonatal': datos.get('antecedente_neonatal'),
+                    'antecedente_neonatal_si': datos.get('antecedente_neonatal_si'),
+                    'antecedente_neonatal_no': datos.get('antecedente_neonatal_no'),
                     'edad_neonatal_semanas': datos.get('edad_neonatal_semanas'),
                     'edad_neonatal_dias': datos.get('edad_neonatal_dias'),
                     'peso_datos': datos.get('peso_datos'),
                     'talla_datos': datos.get('talla_datos'),
-                    'patologias': datos.get('patologias'),
-                    'alergias': datos.get('alergias')
+                    'patologias_si': datos.get('patologias_si'),
+                    'patologias_no': datos.get('patologias_no'),
+                    'gestas': datos.get('gestas'),
+                    'abortos': datos.get('abortos'),
+                    'partos': datos.get('partos'),
+                    'cesareas': datos.get('cesareas'),
+                    'normal': datos.get('normal'),
+                    'riesgo': datos.get('riesgo'),
+                    'espontaneo': datos.get('espontaneo'),
+                    'intraoperatoria': datos.get('intraoperatoria'),
+                    'electiva': datos.get('electiva')
                 }
                 
                 datos_actualizar = {k: v for k, v in datos_actualizar.items() if v}
