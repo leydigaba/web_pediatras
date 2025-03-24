@@ -193,6 +193,28 @@ $def with (datos)
                 margin-left: var(--sidebar-width);
                 width: calc(100% - var(--sidebar-width));
             }
+            .estado-select {
+                font-weight: bold;
+                border: none;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .status-activo {
+                background-color: #d4edda; /* Verde claro */
+                color: #155724;
+            }
+
+            .status-inactivo {
+                background-color: #f8d7da; /* Rojo claro */
+                color: #721c24;
+            }
+
+            .status-pendiente {
+                background-color: #fff3cd; /* Amarillo claro */
+                color: #856404;
+            }
         }
     </style>
 </head>
@@ -328,12 +350,11 @@ $def with (datos)
                                         <td>$paciente.get('edad', 'N/A')</td>
                                         <td>$paciente.get('genero', 'N/A')</td>
                                         <td>
-                                            $if paciente.get('estado') == 'activo':
-                                                <span class="status-badge status-activo">Activo</span>
-                                            $elif paciente.get('estado') == 'inactivo':
-                                                <span class="status-badge status-inactivo">Inactivo</span>
-                                            $else:
-                                                <span class="status-badge status-pendiente">Pendiente</span>
+                                            <select class="estado-select" data-id="$id">
+                                                <option value="pendiente" $if paciente.get('estado') == 'pendiente': selected>🟡 Pendiente</option>
+                                                <option value="activo" $if paciente.get('estado') == 'activo': selected>🟢 Activo</option>
+                                                <option value="inactivo" $if paciente.get('estado') == 'inactivo': selected>🔴 Inactivo</option>
+                                            </select>
                                         </td>
                                         <td>
                                             <a href="/usuario/$id" class="btn btn-sm btn-primary btn-action">
@@ -395,6 +416,44 @@ $def with (datos)
     <!-- Bootstrap JS y Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const estadoSelects = document.querySelectorAll(".estado-select");
+
+        estadoSelects.forEach(select => {
+            select.addEventListener("change", function () {
+                const pacienteId = this.getAttribute("data-id");
+                const nuevoEstado = this.value;
+
+                // Actualizar visualmente el color de la opción seleccionada
+                this.classList.remove("status-activo", "status-inactivo", "status-pendiente");
+                if (nuevoEstado === "activo") {
+                    this.classList.add("status-activo");
+                } else if (nuevoEstado === "inactivo") {
+                    this.classList.add("status-inactivo");
+                } else {
+                    this.classList.add("status-pendiente");
+                }
+
+                // Enviar la actualización al servidor
+                fetch(`/actualizar_estado/${pacienteId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ estado: nuevoEstado }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Estado actualizado correctamente");
+                    } else {
+                        alert("Error al actualizar el estado");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    });
         document.addEventListener('DOMContentLoaded', function () {
         console.log('Script cargado y ejecutándose');
 
