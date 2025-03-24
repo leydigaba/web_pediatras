@@ -572,7 +572,7 @@ verBotones.forEach(boton => {
         
         // Obtener el nombre del paciente y valor OMS de la fila correspondiente
         const fila = this.closest('tr');
-        const nombrePaciente = fila.cells[1].textContent.trim();
+        const nombrePaciente = fila.cells[0].textContent.trim();
         const omsValorRaw = fila.querySelector('.oms-valor').textContent.trim();
         
         // Actualizar el texto de estadísticas
