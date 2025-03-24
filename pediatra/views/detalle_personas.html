@@ -337,8 +337,6 @@ $def with (datos)
             <div class="nav-item" id="tab-antecedentes">Antecedentes</div>
             <div class="nav-item" id="tab-documentacion">Documentación</div>
         </div>
-        
-        <!-- Sección: Ficha médica básica -->
         <div class="section-container" id="seccion-ficha">
             <form method="post" action="">
                 <div class="form-row">
@@ -432,9 +430,13 @@ $def with (datos)
                         </div>
                     </div>
                 </div>
+                <!-- Botones de acción para ficha médica -->
+                <div class="actions">
+                    <button type="submit" class="action-btn save-btn">Guardar cambios</button>
+                    <button type="button" class="action-btn cancel-btn">Cancelar</button>
+                </div>
             </form>
         </div>
-
         
         <div class="section-container" id="seccion-antecedentes">
             <form method="post" action="">
@@ -515,54 +517,57 @@ $def with (datos)
                             <label><input type="radio" name="terminacion" value="electiva" {% if paciente.get('terminacion') == 'electiva' %} checked {% endif %}> Electiva</label>
                         </div>
                     </div>
-               
+                </div>
+                <!-- Botones de acción para antecedentes -->
                 <div class="actions">
-                    <button class="action-btn delete-btn" id="delete-btn">Eliminar paciente</button>
-                    <button class="action-btn save-btn" id="save-btn">Guardar cambios</button>
+                    <button type="submit" class="action-btn save-btn">Guardar antecedentes</button>
+                    <button type="button" class="action-btn cancel-btn">Cancelar</button>
                 </div>
             </form>
         </div>
-    </div>
-
-        <!-- Sección: Documentación (invisible por defecto) -->
-        <div class="section-container" id="seccion-documentacion" style="display: none;">
+        
+        <!-- Sección: Documentación -->
+        <div class="section-container" id="seccion-documentacion">
             <h3 class="section-header">Documentación</h3>
-            <div class="form-row">
-                <div class="form-column">
-                    <div class="form-group">
-                        <div class="form-label">Carnet de vacunación</div>
-                        <input type="file" class="form-input" name="carnet_vacunacion">
-                        <a href="#" class="view-document">Ver documento</a>
+            <form method="post" action="" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label class="form-label">Carnet de vacunación</label>
+                            <input type="file" class="form-input" name="carnet_vacunacion">
+                            <a href="#" class="view-document" id="ver_carnet_vacunacion">Ver documento</a>
+                            <div class="document-preview" id="preview_carnet_vacunacion"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Resultados de laboratorio</label>
+                            <input type="file" class="form-input" name="resultados_laboratorio">
+                            <a href="#" class="view-document" id="ver_resultados_laboratorio">Ver documento</a>
+                            <div class="document-preview" id="preview_resultados_laboratorio"></div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <div class="form-label">Resultados de laboratorio</div>
-                        <input type="file" class="form-input" name="resultados_laboratorio">
-                        <a href="#" class="view-document">Ver documento</a>
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label class="form-label">Recetas médicas</label>
+                            <input type="file" class="form-input" name="recetas_medicas">
+                            <a href="#" class="view-document" id="ver_recetas_medicas">Ver documento</a>
+                            <div class="document-preview" id="preview_recetas_medicas"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Otros documentos</label>
+                            <input type="file" class="form-input" name="otros_documentos">
+                            <a href="#" class="view-document" id="ver_otros_documentos">Ver documento</a>
+                            <div class="document-preview" id="preview_otros_documentos"></div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="form-column">
-                    <div class="form-group">
-                        <div class="form-label">Recetas médicas</div>
-                        <input type="file" class="form-input" name="recetas_medicas">
-                        <a href="#" class="view-document">Ver documento</a>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="form-label">Otros documentos</div>
-                        <input type="file" class="form-input" name="otros_documentos">
-                        <a href="#" class="view-document">Ver documento</a>
-                    </div>
+                <div class="actions">
+                    <button type="submit" class="action-btn save-btn">Guardar documentos</button>
+                    <button type="button" class="action-btn delete-btn">Eliminar paciente</button>
                 </div>
-            </div>
-               
-    <div class="actions">
-        <button class="action-btn delete-btn" id="delete-btn">Eliminar paciente</button>
-        <button class="action-btn save-btn" id="save-btn">Guardar cambios</button>
-    </div>
+            </form>
+        </div>
+        
     
-
     <!-- Script para la navegación entre pestañas -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -652,6 +657,7 @@ $def with (datos)
                 document.querySelector('form').submit();
             });
         });
+        
     </script>
 
 </body>
