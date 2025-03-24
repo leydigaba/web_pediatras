@@ -59,7 +59,6 @@ def iniciar_sesion(correo, password):
         return None
 
 
-
 class Personas:
     def __init__(self):
         self.db = db

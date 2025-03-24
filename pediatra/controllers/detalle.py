@@ -8,7 +8,6 @@ render = web.template.render("views/")
 class DetalleUsuario:
     def GET(self, paciente_id):
         try:
-            # Verificar si la sesión está iniciada
             session = web.ctx.session
             if not session.get('usuario'):
                 print("🚫 No hay usuario en sesión. Redirigiendo a /iniciosesion...")
@@ -16,8 +15,6 @@ class DetalleUsuario:
 
             correo_pediatra = session.get('usuario').get('correo')
             personas = Personas()
-
-            # Obtener el paciente por su ID utilizando el método de la clase Personas
             paciente = personas.lista_pacientes_por_id_y_pediatra(paciente_id,correo_pediatra)
             print("Paciente obtenido:", paciente)
             
@@ -30,7 +27,6 @@ class DetalleUsuario:
         except web.seeother as redireccion:
             raise redireccion
 
-
     def POST(self, paciente_id):
             print(f"POST iniciado con paciente_id: '{paciente_id}'")
             try:
@@ -40,7 +36,7 @@ class DetalleUsuario:
                     print("🚫 No hay usuario en sesión. Redirigiendo a /iniciosesion...")
                     return json.dumps({"error": "No hay sesión iniciada"})
 
-                # Obtener los datos del formulario
+                
                 datos = web.input()
                 correo_pediatra = session.get('usuario').get('correo')
                 personas = Personas()
@@ -49,7 +45,7 @@ class DetalleUsuario:
                 if not paciente or not paciente.get(paciente_id):
                     return json.dumps({"error": "No tienes acceso a este paciente"})
                 
-                # Preparar los datos a actualizar
+                
                 datos_actualizar = {
                     'nombre': datos.get('nombre'),
                     'primer_apellido': datos.get('apellido1'),
@@ -75,10 +71,7 @@ class DetalleUsuario:
                     'alergias': datos.get('alergias')
                 }
                 
-                # Filtrar campos vacíos
                 datos_actualizar = {k: v for k, v in datos_actualizar.items() if v}
-                
-                # Actualizar los datos del paciente
                 resultado = personas.actualizar_paciente(paciente_id, datos_actualizar)
                 
                 if resultado:

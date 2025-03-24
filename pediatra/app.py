@@ -11,6 +11,7 @@ from controllers.cerrarsesion import Logout as Logout
 from controllers.estadistica_personas import EstadisticaUsuario as EstadisticaUsuario
 from controllers.configuracion import Configuracion as Configuracion
 from controllers.configuracion import ActualizarConfiguracion as ActualizarConfiguracion
+from controllers.ficha import DetallePersonas as DetallePersonas
 
 web.config.debug = False  
 
@@ -26,8 +27,9 @@ urls = (
     '/estadisticas', 'EstadisticaUsuario',
     '/configuracion', 'Configuracion',
     '/actualizar_configuracion', 'ActualizarConfiguracion',
-    '/consulta', 'Consulta'
-    '/cambiar_estado/(.*)', 'CambiarEstado'
+    '/consulta', 'Consulta',
+    '/cambiar_estado/(.*)', 'CambiarEstado',
+    '/credencial/(.*)', 'DetallePersonas'
 
 )
 
