@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Administradores</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/indexadmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<script>
+    document.querySelector(".regist").addEventListener("click", function () {
+        let formData = new FormData();
+        formData.append("nombre", document.getElementById("nombre").value);
+        formData.append("primer-apellido", document.getElementById("primer-apellido").value);
+        formData.append("segundo-apellido", document.getElementById("segundo-apellido").value);
+        formData.append("telefono", document.getElementById("telefono").value);
+        formData.append("correo", document.getElementById("correo").value);
+        formData.append("rango", document.getElementById("rango").value);
+        formData.append("contrasena", document.getElementById("contrasena").value);
+        formData.append("confirmar-contrasena", document.getElementById("confirmar-contrasena").value);
+    
+        fetch("/registroadmin", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())  
+        .then(data => {
+            let mensaje = document.getElementById("mensaje");
+            mensaje.textContent = data.message;
+            mensaje.className = data.status === "success" ? "alert success" : "alert error";
+        })
+        .catch(error => console.error("Error:", error));
+    });
+    </script>    
+<body>
+    <h1 class="title">Panel Administrativo</h1>
+    <p class="welcome-text">Bienvenido al panel administrativo</p>
+
+    <div class="barra">
+        <div class="user-info">
+            <a href="javascript:void(0)" onclick="openInfoAdminModal()"><i class="fas fa-user"></i></a>
+            <span>Eduardo Caballero -</span>
+            <span>Admin Rango A</span>
+        </div>
+        <div class="actions">
+            <a href="#"><i class="fas fa-bell"></i></a>
+            <a href="javascript:void(0)" onclick="openNewAdminModal()"><i class="fas fa-user-plus"></i></a>
+            <a href="javascript:void(0)" onclick="openCloseSesionModal()"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <p class="welcome-text" style="margin-top: 20px;">Resumen</p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Pediatras Registrados</th>
+                    <th>Pacientes Activos</th>
+                    <th>Consultas Registradas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023-10-01</td>
+                    <td>10</td>
+                    <td>50</td>
+                    <td>30</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="button-container">
+        <button onclick="window.location.href='/vistarespuestas';">Respuestas</button>
+        <button onclick="window.location.href='/vistapacientes';">Gestionar Pacientes</button>
+        <button onclick="window.location.href='/vistapediatras';">Gestionar Pediatras</button>
+        <button onclick="window.location.href='/vistareportes';">Reportes</button>
+        <button onclick="window.location.href='/vistaadmins';">Gestionar Administradores</button>
+    </div>
+    <!-- Modales -->
+
+    <!-- Modal "Ver Perfil" -->
+    <div id="infoAdminModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeInfoAdminModal()">&times;</span>
+            <div class="modal-header">
+                <h2>Información del Administrador</h2>
+                <div class="fotoperfil"></div>
+            </div>
+            <div class="form-container">
+                <div>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" readonly>
+                </div>
+                <div>
+                    <label for="primer-apellido">Primer Apellido:</label>
+                    <input type="text" id="primer-apellido" name="primer-apellido" readonly>
+                </div>
+                <div>
+                    <label for="segundo-apellido">Segundo Apellido:</label>
+                    <input type="text" id="segundo-apellido" name="segundo-apellido" readonly>
+                </div>
+                <div>
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" readonly>
+                </div>
+                <div>
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo" name="correo" readonly>
+                </div>
+                <div>
+                    <label for="rango">Rango del Administrador:</label>
+                    <select id="rango" name="rango" readonly>
+                        <option value="">Selecciona un rango</option>
+                        <option value="superadmin">Super Administrador</option>
+                        <option value="admin">Administrador</option>
+                        <option value="moderador">Moderador</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button style="margin-top: 30px; width: 60%; margin-left: 20%;" type="button" class="editt">Editar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal "Agregar Administrador" -->
+    <div id="newAdminModal" class="modal">
+        <div class="modal-content2">
+            <span class="close" onclick="closeNewAdminModal()">&times;</span>
+            <div class="modal-header">
+                <h2>Añadir Administrador</h2>
+                <div class="fotoperfil"></div>
+            </div>
+            
+            <form id="adminForm" method="post" action="/registro_admin">
+                <div class="form-container">
+                    <div>
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div>
+                        <label for="apellido1">Primer Apellido:</label>
+                        <input type="text" id="apellido1" name="apellido1" required>
+                    </div>
+                    <div>
+                        <label for="apellido2">Segundo Apellido:</label>
+                        <input type="text" id="apellido2" name="apellido2" required>
+                    </div>
+                    <div>
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" name="telefono" required>
+                    </div>
+                    <div>
+                        <label for="correo">Correo:</label>
+                        <input type="email" id="correo" name="correo" required>
+                    </div>
+                    <div>
+                        <label for="rango">Rango del Administrador:</label>
+                        <select id="rango" name="rango" required>
+                            <option value="">Selecciona un rango</option>
+                            <option value="superadmin">Super Administrador</option>
+                            <option value="respuestas">Respuestas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="contrasena">Contraseña:</label>
+                        <input type="password" id="contrasena" name="contrasena" required>
+                    </div>
+                    <div>
+                        <label for="confirmar_contrasena">Confirmar Contraseña:</label>
+                        <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                    </div>
+                </div>
+                <div>
+                    <div id="mensaje" class="alert"></div>
+                    <button style="margin-top: 30px; width: 60%; margin-left: 20%;" type="submit" class="regist">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>    
+    <div id="closeSesionModal" class="modal">
+        <div class="modal-content3">
+            <div class="title3">
+                <h1 class="addvert">¿Estás seguro de cerrar sesión?</h1>
+            </div>
+            <p class="warning">Cerrar sesión puede interrumpir tus tareas actuales. Asegúrate de haber guardado todo antes de continuar.</p>
+            <div class="button-container1">
+                <button class="closes">Cerrar Sesión</button>
+                <button class="closes cancel-closes" onclick="closeCloseSesionModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Ver Información del Administrador
+        function openInfoAdminModal() {
+            document.getElementById('infoAdminModal').style.display = 'block';
+        }
+        
+        function closeInfoAdminModal() {
+            document.getElementById('infoAdminModal').style.display = 'none';
+        }
+
+        // Agregar Información del Administrador
+        function openNewAdminModal() {
+            document.getElementById('newAdminModal').style.display = 'block';
+        }
+
+        function closeNewAdminModal() {
+            document.getElementById('newAdminModal').style.display = 'none';
+        }
+
+        // Cerrar Sesión
+
+        function openCloseSesionModal() {
+            document.getElementById('closeSesionModal').style.display = 'block';
+        }
+
+        function closeCloseSesionModal() {
+            document.getElementById('closeSesionModal').style.display = 'none';
+        }
+
+    </script>
+</body>
+</html>

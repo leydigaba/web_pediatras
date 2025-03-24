@@ -11,8 +11,7 @@ class Registro:
     def POST(self):
         try:
             datos = web.input()
-            
-            
+
             if not self.validar_nombre(datos.nombre) or not self.validar_nombre(datos.apellido1) or not self.validar_nombre(datos.apellido2):
                 return "Error: El nombre y apellidos solo pueden contener letras y espacios."
             
@@ -31,7 +30,7 @@ class Registro:
             if datos.password != datos.password_confirm:
                 return "Error: Las contraseñas no coinciden."
             
-            
+            # Llamar al modelo para registrar al usuario con rol "user"
             resultado = registrar_usuario(
                 datos.nombre.strip(),
                 datos.apellido1.strip(),
@@ -49,7 +48,7 @@ class Registro:
                 
         except Exception as e:
             return f"Error inesperado: {str(e)}"
-    
+
     def validar_nombre(self, texto):
         """Permite solo letras y espacios en nombres y apellidos"""
         return bool(re.match(r"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", texto))
@@ -69,5 +68,3 @@ class Registro:
     def validar_password(self, password):
         """Verifica que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número"""
         return bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$", password))
-
-        

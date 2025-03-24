@@ -17,8 +17,8 @@ auth = firebase.auth()
 
 def registrar_usuario(nombre, apellido1, apellido2, fecha_nacimiento, correo, licencia, password):
     try:
-        user = auth.create_user_with_email_and_password(correo, password)  # ¡Firebase maneja la seguridad!
-        
+        user = auth.create_user_with_email_and_password(correo, password)  
+
         datos_usuario = {
             "nombre": nombre,
             "apellido1": apellido1,
@@ -26,10 +26,13 @@ def registrar_usuario(nombre, apellido1, apellido2, fecha_nacimiento, correo, li
             "fecha_nacimiento": fecha_nacimiento,
             "correo": correo,
             "licencia": licencia,
-            "uid": user["localId"]  
+            "uid": user["localId"],
+            "rol": "user"  # Siempre será "user"
         }
-        
-        db.child("usuarios").child(correo.replace(".", ",")).set(datos_usuario)
+
+        # Guardar en Firebase
+        db.child("usuarios").child(user["localId"]).set(datos_usuario)
+
         print("Usuario registrado correctamente.")
         return True
 
@@ -56,7 +59,29 @@ def iniciar_sesion(correo, password):
         print(f"Error en el inicio de sesión: {str(e)}")
         return None
 
+def registrar_administrador(nombre, apellido1, apellido2, telefono, correo, rango, password):
+    try:
+        user = auth.create_user_with_email_and_password(correo, password)
 
+        datos_admin = {
+            "nombre": nombre,
+            "apellido1": apellido1,
+            "apellido2": apellido2,
+            "telefono": telefono,
+            "correo": correo,
+            "rango": rango,
+            "uid": user["localId"],
+            "rol": "admin"
+        }
+
+        db.child("administradores").child(user["localId"]).set(datos_admin)
+
+        print("Administrador registrado correctamente.")
+        return True
+
+    except Exception as e:
+        print(f"Error al registrar administrador: {str(e)}")
+        return False
 
 class Personas:
     def __init__(self):

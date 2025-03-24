@@ -1,14 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 import web
 from controllers.index import Index  
 from controllers.registro import Registro as Registro
 from controllers.iniciosesion import Iniciosesion as Iniciosesion
 from controllers.lista_personas import ListaPersonas as ListaPersonas
 from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
-from controllers.detalle import DetalleUsuario as DetalleUsuario
 from controllers.cerrarsesion import Logout as Logout
-
+from controllers.indexadmin import IndexAdmin as IndexAdmin
+from controllers.admins.vistaadmins import VistaAdmins as VistaAdmins
+from controllers.admins.vistapediatras import VistaPediatras as VistaPediatras
+from controllers.admins.vistapacientes import VistaPacientes as VistaPacientes
+from controllers.admins.vistarespuestas import VistaRespuestas as VistaRespuestas
+from controllers.admins.vistareportes import VistaReportes as VistaReportes
+from controllers.registroadmin import RegistroAdmin
 
 web.config.debug = False  
 
@@ -19,9 +22,14 @@ urls = (
     '/iniciosesion', 'Iniciosesion',
     '/listapersonas', 'ListaPersonas',
     '/agregar', 'AgregarPaciente',
-    '/usuario/(.+)', 'DetalleUsuario',
-    '/logout', 'Logout'
-
+    '/logout', 'Logout',
+    '/indexadmin', 'IndexAdmin',
+    '/vistaadmins', 'VistaAdmins',
+    '/vistapediatras', 'VistaPediatras',
+    '/vistapacientes', 'VistaPacientes',
+    '/vistarespuestas', 'VistaRespuestas',
+    '/vistareportes', 'VistaReportes',
+    '/registro_admin', 'RegistroAdmin'
 )
 
 app = web.application(urls, globals())
@@ -36,5 +44,6 @@ def session_hook():
     web.ctx.session = web.config._session
 
 app.add_processor(web.loadhook(session_hook))
+
 if __name__ == "__main__":
     app.run()
