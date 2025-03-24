@@ -30,6 +30,8 @@ urls = (
     '/consulta', 'Consulta',
     '/cambiar_estado/(.*)', 'CambiarEstado',
     '/credencial/(.*)', 'DetallePersonas'
+    
+
 
 )
 

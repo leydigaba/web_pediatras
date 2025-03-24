@@ -129,6 +129,7 @@ class Personas:
                 if pediatra_email and paciente.get('pediatra') != pediatra_email:
                     continue
                 
+                paciente["documentos"] = paciente.get("documentos", {})
                 pacientes_filtrados[id] = paciente
             
             print(f"Pacientes filtrados con ID {paciente_id} y pediatra {pediatra_email}: {len(pacientes_filtrados)}")

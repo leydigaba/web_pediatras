@@ -319,7 +319,7 @@ $def with (datos)
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        
                                         <th>Nombre</th>
                                         <th>Edad</th>
                                         <th>Estado</th>
@@ -331,7 +331,7 @@ $def with (datos)
                                     $if datos:
                                         $for id, paciente in datos.items():
                                             <tr>
-                                                <td>$paciente.get('id', id[:6])</td>
+                                                
                                                 <td>$paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')</td>
                                                 <td>$paciente.get('edad', 'N/A')</td>
                                                 <td>
