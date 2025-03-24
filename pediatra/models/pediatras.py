@@ -1,6 +1,8 @@
 import pyrebase
 import bcrypt  # Importar bcrypt para el hashing de contraseñas
 import json
+import uuid
+
 
 config = {
     "apiKey": "AIzaSyBJf1q8pBMRDbK1-QsCBOAlCFWlC7ehh1A",
@@ -137,17 +139,6 @@ class Personas:
             print(f"Error al listar pacientes: {str(e)}")
             return {}
 
-    def actualizar_paciente(self, paciente_id, datos_actualizar):
-        try:
-            self.db.child("pacientes").child(paciente_id).update(datos_actualizar)
-            print(f"Datos actualizados para el paciente {paciente_id}: {datos_actualizar}")
-            return True
-        except Exception as e:
-            print(f"Error al actualizar paciente: {str(e)}")
-            return False
-
-
-
     def agregar_paciente(self, datos_paciente):
         """Método para agregar un paciente completo con todos sus datos"""
         try:
@@ -156,3 +147,50 @@ class Personas:
         except Exception as e:
             print(f"Error al agregar paciente: {str(e)}")
             return False
+        
+
+    def obtener_pediatra(self, correo):
+        """
+        Obtiene los datos de un pediatra por su correo electrónico desde Firebase
+        """
+        try:
+            # En Firebase, el punto (.) no está permitido en las claves, así que lo reemplazamos por coma (,)
+            correo_key = correo.replace(".", ",")
+            datos = self.db.child("usuarios").child(correo_key).get()
+            
+            if datos.val():
+                return datos.val()
+            return None
+        except Exception as e:
+            print(f"Error al obtener pediatra: {str(e)}")
+            return None
+
+    def actualizar_pediatra(self, correo, datos):
+        try:
+            # En Firebase, el punto (.) no está permitido en las claves, así que lo reemplazamos por coma (,)
+            correo_key = correo.replace(".", ",")
+            
+            # En Firebase, podemos actualizar solo los campos específicos
+            self.db.child("usuarios").child(correo_key).update(datos)
+            
+            return True
+        except Exception as e:
+            print(f"Error al actualizar pediatra: {str(e)}")
+            return False
+
+
+class CambiarEstado:
+    def POST(self, paciente_id):
+        try:
+            datos = json.loads(web.data())
+            nuevo_estado = datos.get("estado")
+
+            if nuevo_estado not in ["activo", "inactivo", "pendiente"]:
+                return web.badrequest()
+
+            doc_ref = db.collection("personas").document(paciente_id)
+            doc_ref.update({"estado": nuevo_estado})
+
+            return json.dumps({"success": True})
+        except Exception as e:
+            return json.dumps({"success": False, "error": str(e)})

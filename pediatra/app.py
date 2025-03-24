@@ -9,6 +9,8 @@ from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
 from controllers.detalle import DetalleUsuario as DetalleUsuario
 from controllers.cerrarsesion import Logout as Logout
 from controllers.estadistica_personas import EstadisticaUsuario as EstadisticaUsuario
+from controllers.configuracion import Configuracion as Configuracion
+from controllers.configuracion import ActualizarConfiguracion as ActualizarConfiguracion
 
 web.config.debug = False  
 
@@ -20,8 +22,12 @@ urls = (
     '/listapersonas', 'ListaPersonas',
     '/agregar', 'AgregarPaciente',
     '/usuario/(.+)', 'DetalleUsuario',
+    '/logout', 'Logout',
     '/estadisticas', 'EstadisticaUsuario',
-    '/logout', 'Logout'
+    '/configuracion', 'Configuracion',
+    '/actualizar_configuracion', 'ActualizarConfiguracion',
+    '/consulta', 'Consulta'
+    '/cambiar_estado/(.*)', 'CambiarEstado'
 
 )
 
