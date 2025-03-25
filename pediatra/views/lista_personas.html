@@ -173,6 +173,22 @@ $def with (datos)
             align-items: center;
             justify-content: center;
         }
+        .bg-soft-pink {
+        background-color: rgba(255, 105, 180, 0.1);
+        }
+        .text-pink {
+            color: #ff69b4;
+        }
+        .bg-soft-primary {
+            background-color: rgba(78, 115, 223, 0.1);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+        }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -323,8 +339,22 @@ $def with (datos)
                             $if datos:
                                 $for id, paciente in datos.items():
                                     <tr>
-                                        
-                                        <td>$paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')</td>
+                                        <td>
+                                            $if paciente.get('genero', '').lower() == 'femenino':
+                                                <span class="d-flex align-items-center">
+                                                    <span class="badge bg-soft-pink text-pink me-2 p-2 rounded-circle">
+                                                        <i class="fas fa-female"></i>
+                                                    </span>
+                                                    $paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')
+                                                </span>
+                                            $else:
+                                                <span class="d-flex align-items-center">
+                                                    <span class="badge bg-soft-primary text-primary me-2 p-2 rounded-circle">
+                                                        <i class="fas fa-male"></i>
+                                                    </span>
+                                                    $paciente.get('nombre', 'N/A') $paciente.get('apellido1', '') $paciente.get('apellido2', '')
+                                                </span>
+                                        </td>
                                         <td>$paciente.get('edad', 'N/A')</td>
                                         <td>$paciente.get('genero', 'N/A')</td>
                                         <td>
