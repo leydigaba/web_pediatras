@@ -386,7 +386,7 @@ $def with (datos)
             </div>
             $for id, paciente in datos.items():
                 <form action="/actualizar_foto_paciente" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="paciente_id" value="" name="pacciente">
+                    <input type="hidden"  value="$id" name="paciente_id" id="paciente_id">
                     <input type="file" name="foto" id="foto-input-paciente" style="display:none;" accept="image/*">
                 </form>
             <div class="profile-info">
@@ -634,39 +634,78 @@ $def with (datos)
         
         <!-- Sección: Documentación -->
          
-        <div class="section-container" id="seccion-documentacion" style="display: none;">
-            <h3 class="section-header">Documentación</h3>
-            <form method="post" action="" enctype="multipart/form-data">
-                <div class="form-row">
-                    <div class="form-column">
-                        <div class="form-group">
-                            <div class="form-label">Carnet de vacunación</div>
-                            <input type="file" class="form-input" name="carnet_vacunacion">
-                            <a href="#" class="view-document">Ver documento</a>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-label">Resultados de laboratorio</div>
-                            <input type="file" class="form-input" name="resultados_laboratorio">
-                            <a href="#" class="view-document">Ver documento</a>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-label">Recetas médicas</div>
-                            <input type="file" class="form-input" name="recetas_medicas">
-                            <a href="#" class="view-document">Ver documento</a>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-label">Otros documentos</div>
-                            <input type="file" class="form-input" name="otros_documentos">
-                            <a href="#" class="view-document">Ver documento</a>
+        $# Usar una variable de iteración más segura
+        $for paciente_id, paciente in datos.items():
+            <!-- Sección: Documentación -->
+            <div class="section-container" id="seccion-documentacion" style="display: none;">
+                <h3 class="section-header">Documentación</h3>
+                <form method="post" action="" enctype="multipart/form-data" id="documentos-form">
+                    <div class="form-row">
+                        <div class="form-column">
+                            $# Carnet de vacunación
+                            <div class="form-group">
+                                <div class="form-label">Carnet de vacunación</div>
+                                <input type="file" class="form-input" name="carnet_vacunacion" id="carnet_vacunacion">
+                                $if 'documentos' in paciente and 'carnet_vacunacion' in paciente['documentos']:
+                                    <div class="documento-existente">
+                                        <span class="documento-icon">📄</span>
+                                        <a href="$paciente['documentos']['carnet_vacunacion']" target="_blank" class="view-document">Ver documento</a>
+                                    </div>
+                                $else:
+                                    <div class="documento-vacio">No hay documento subido</div>
+                            </div>
+        
+                            $# Resultados de laboratorio
+                            <div class="form-group">
+                                <div class="form-label">Resultados de laboratorio</div>
+                                <input type="file" class="form-input" name="resultados_laboratorio" id="resultados_laboratorio">
+                                $if 'documentos' in paciente and 'resultados_laboratorio' in paciente['documentos']:
+                                    <div class="documento-existente">
+                                        <span class="documento-icon">📄</span>
+                                        <a href="$paciente['documentos']['resultados_laboratorio']" target="_blank" class="view-document">Ver documento</a>
+                                    </div>
+                                $else:
+                                    <div class="documento-vacio">No hay documento subido</div>
+                            </div>
+        
+                            $# Recetas médicas
+                            <div class="form-group">
+                                <div class="form-label">Recetas médicas</div>
+                                <input type="file" class="form-input" name="recetas_medicas" id="recetas_medicas">
+                                $if 'documentos' in paciente and 'recetas_medicas' in paciente['documentos']:
+                                    <div class="documento-existente">
+                                        <span class="documento-icon">📄</span>
+                                        <a href="$paciente['documentos']['recetas_medicas']" target="_blank" class="view-document">Ver documento</a>
+                                    </div>
+                                $else:
+                                    <div class="documento-vacio">No hay documento subido</div>
+                            </div>
+        
+                            $# Otros documentos
+                            <div class="form-group">
+                                <div class="form-label">Otros documentos</div>
+                                <input type="file" class="form-input" name="otros_documentos" id="otros_documentos">
+                                $if 'documentos' in paciente and 'otros_documentos' in paciente['documentos']:
+                                    <div class="documento-existente">
+                                        <span class="documento-icon">📄</span>
+                                        <a href="$paciente['documentos']['otros_documentos']" target="_blank" class="view-document">Ver documento</a>
+                                    </div>
+                                $else:
+                                    <div class="documento-vacio">No hay documento subido</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="actions">
-                    <button type="submit" class="action-btn save-btn">Guardar documentos</button>
-                    <button type="button" class="action-btn delete-btn">Eliminar paciente</button>
-                </div>
-            </form>
-        </div>
+                    <div class="actions">
+                        <button type="submit" class="action-btn save-btn">Guardar documentos</button>
+                        <button type="button" class="action-btn delete-btn">Eliminar paciente</button>
+                    </div>
+                </form>
+            </div>
+        
+        
+        $# Fin del bucle de pacientes
+
+
     </div>
     
     <!-- Script para la navegación entre pestañas -->
@@ -760,6 +799,8 @@ $def with (datos)
         document.addEventListener('DOMContentLoaded', function() {
     const fotoInput = document.getElementById('foto-input');
     const fotoInputPaciente = document.getElementById('foto-input-paciente');
+    
+    
     
     if (fotoInputPaciente) {
         fotoInputPaciente.addEventListener('change', function() {

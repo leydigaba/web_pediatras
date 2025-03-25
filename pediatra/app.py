@@ -7,7 +7,7 @@ from controllers.iniciosesion import Iniciosesion as Iniciosesion
 from controllers.lista_personas import ListaPersonas as ListaPersonas
 from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
 from controllers.detalle import DetalleUsuario as DetalleUsuario
-#from controllers.detalle import ActualizarFotoBebe as ActualizarFotoBebe
+from controllers.detalle import ActualizarFotoBebe as ActualizarFotoBebe
 from controllers.cerrarsesion import Logout as Logout
 from controllers.estadistica_personas import EstadisticaUsuario as EstadisticaUsuario
 from controllers.configuracion import Configuracion as Configuracion
