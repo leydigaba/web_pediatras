@@ -53,7 +53,37 @@ class DetalleUsuario:
             
             # Separar la actualización de datos y documentos
             datos_actualizar = {
-                # ... tus campos existentes ...
+                      'nombre': datos.get('nombre'),
+                    'primer_apellido': datos.get('apellido1'),
+                    'segundo_apellido': datos.get('apellido2'),
+                    'fecha_nacimiento': datos.get('fecha_nacimiento'),
+                    'edad': datos.get('edad'),
+                    'curp': datos.get('curp'),
+                    'genero': datos.get('genero'),
+                    'nombre_madre': datos.get('nombre_madre'),
+                    'nombre_padre': datos.get('nombre_padre'),
+                    'telefono': datos.get('telefono'),
+                    'direccion': datos.get('direccion'),
+                    'peso': datos.get('peso'),
+                    'talla': datos.get('talla'),
+                    'perimetro_cefalico': datos.get('perimetro_cefalico'),
+                    'grupo_sanguineo': datos.get('grupo_sanguineo'),
+                    'antecedente_neonatal_si': datos.get('antecedente_neonatal_si'),
+                    'antecedente_neonatal_no': datos.get('antecedente_neonatal_no'),
+                    'edad_neonatal_semanas': datos.get('edad_neonatal_semanas'),
+                    'edad_neonatal_dias': datos.get('edad_neonatal_dias'),
+                    'peso_datos': datos.get('peso_datos'),
+                    'talla_datos': datos.get('talla_datos'),
+                    'patologias_si': datos.get('patologias_si'),
+                    'patologias_no': datos.get('patologias_no'),
+                    'gestas': datos.get('gestas'),
+                    'abortos': datos.get('abortos'),
+                    'partos': datos.get('partos'),
+                    'cesareas': datos.get('cesareas'),
+                    'normal': datos.get('normal'),
+                    'riesgo': datos.get('riesgo'), 
+                    'alto_riesgo': datos.get('alto_riesgo'),
+                    'terminacion': datos.get('terminacion')
             }
             
             # Remover claves vacías
@@ -73,8 +103,10 @@ class DetalleUsuario:
             
             if documentos_guardados:
                 response["documentos"] = documentos_guardados
-            
+                
+            raise web.seeother(f'/usuario/{paciente_id}')
             return json.dumps(response)
+            
             
         except Exception as e:
             print("Error en POST de DetalleUsuario:", str(e))
