@@ -29,7 +29,49 @@ class DetalleUsuario:
 
     def POST(self, paciente_id):
             print(f"POST iniciado con paciente_id: '{paciente_id}'")
-            try:
+            try:class ActualizarFotoPaciente:
+    def POST(self):
+        try:
+            session = web.ctx.session
+            if not session.get('usuario'):
+                return json.dumps({"error": "No hay sesión iniciada"})
+
+            datos = web.input(foto={})
+            correo_pediatra = session.get('usuario').get('correo')
+            
+            # Verificar si se subió un archivo
+            if datos.foto.filename:
+                # Generar nombre de archivo único
+                filename = f"{str(uuid.uuid4())}_{datos.foto.filename}"
+                upload_path = os.path.join('static/uploads', filename)
+                
+                # Crear directorio si no existe
+                os.makedirs('static/uploads', exist_ok=True)
+                
+                # Guardar archivo
+                with open(upload_path, 'wb') as f:
+                    f.write(datos.foto.file.read())
+                
+                # Actualizar en base de datos
+                personas = Personas()
+                
+                # Aquí necesitas obtener el ID del paciente 
+                # Por ejemplo, podría venir de un campo oculto en el formulario
+                paciente_id = datos.get('paciente_id')  
+                
+                resultado = personas.actualizar_foto_paciente(paciente_id, f"/static/uploads/{filename}")
+                
+                if resultado:
+                    return json.dumps({"success": True, "foto": f"/static/uploads/{filename}"})
+                else:
+                    return json.dumps({"error": "No se pudo actualizar la foto"})
+            
+            return json.dumps({"error": "No se recibió ningún archivo"})
+        
+        except Exception as e:
+            print(f"Error en actualizar foto: {str(e)}")
+            return json.dumps({"error": str(e)})
+
                 # Verificar si la sesión está iniciada
                 session = web.ctx.session
                 if not session.get('usuario'):
@@ -75,10 +117,10 @@ class DetalleUsuario:
                     'partos': datos.get('partos'),
                     'cesareas': datos.get('cesareas'),
                     'normal': datos.get('normal'),
-                    'riesgo': datos.get('riesgo'),
-                    'espontaneo': datos.get('espontaneo'),
-                    'intraoperatoria': datos.get('intraoperatoria'),
-                    'electiva': datos.get('electiva')
+                    'riesgo': datos.get('riesgo'), 
+                    'alto_riesgo': datos.get('alto_riesgo'),
+                    'terminacion': datos.get('terminacion')
+                    
                 }
                 
                 datos_actualizar = {k: v for k, v in datos_actualizar.items() if v}
@@ -92,3 +134,4 @@ class DetalleUsuario:
             except Exception as e:
                 print("Error en POST de DetalleUsuario:", str(e))
                 return json.dumps({"success": False, "error": str(e)})
+

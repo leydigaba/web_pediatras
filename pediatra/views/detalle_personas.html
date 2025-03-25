@@ -299,6 +299,45 @@ $def with (datos)
                 width: calc(100% - var(--sidebar-width));
             }
         }
+        .profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #4e73df;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin-right: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-pic .upload-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 0;
+    text-align: center;
+    color: white;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0;
+}
+
+.profile-pic:hover .upload-overlay {
+    opacity: 1;
+}
     </style>
 </head>
 <body>
@@ -331,7 +370,25 @@ $def with (datos)
 
         <!-- Tarjeta de perfil -->
         <div class="profile-card">
-            <div class="profile-pic"></div>
+            <div class="profile-pic">
+            $for id, paciente in datos.items():
+                $if paciente.get('foto_perfil'):
+                    <img src="$paciente.get('foto_perfil')" alt="Foto de perfil del paciente">
+                    <label for="foto-input-paciente" class="upload-overlay">
+                        <i class="fas fa-camera me-1"></i>Cambiar
+                    </label>
+                $else:
+                    <i class="fas fa-baby"></i>
+  
+                    <label for="foto-input-paciente" class="upload-overlay">
+                        <i class="fas fa-camera me-1"></i>Cambiar
+                    </label>
+            </div>
+            $for id, paciente in datos.items():
+                <form action="/actualizar_foto_paciente" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="paciente_id" value="" name="pacciente">
+                    <input type="file" name="foto" id="foto-input-paciente" style="display:none;" accept="image/*">
+                </form>
             <div class="profile-info">
                 <h2>
                 
@@ -464,23 +521,21 @@ $def with (datos)
                 <div class="form-row">
                     <div class="form-column">
                         <h3 class="section-header">Antecedentes neonatales</h3>
-                        <div class="radio-group">
-                            <label>
-                                <input type="radio" name="antecedente_neonatal_si" 
-                                       $if paciente.get('antecedente_neonatal_si') == 'si': checked>
-                                Sí
-                            </label>
-                            <label>
-                                <input type="radio" name="antecedente_neonatal_no"
-                                       $if paciente.get('antecedente_neonatal_no') == 'no': checked>
-                                No
-                            </label>
-                        </div>
+                        <label>
+                            <input type="radio" name="antecedente_neonatal" 
+                                   {{ 'checked' if paciente.get('antecedente_neonatal') == 'si' else '' }}>
+                            Sí
+                        </label>
+                        <label>
+                            <input type="radio" name="antecedente_neonatal"
+                                   {{ 'checked' if paciente.get('antecedente_neonatal') == 'no' else '' }}>
+                            No
+                        </label>
                         
                         <h3 class="section-header">Edad neonatal</h3>
                         <div class="form-group">
                             <div class="form-label">Semanas</div>
-                            <input type="number" value="$paciente.get('edad_neonatal_semanas', 'N/A')" name="antecedente_neonatal"  class="form-input" name="edad_neonatal_semanas" min="0">
+                            <input type="number" value="$paciente.get('edad_neonatal_semanas', 'N/A')" class="form-input" name="edad_neonatal_semanas" min="0">
                         </div>
                         <div class="form-group">
                             <div class="form-label">Días</div>
@@ -498,20 +553,20 @@ $def with (datos)
                         </div>
                         
                         <h3 class="section-header">Antecedentes familiares patológicos</h3>
-                        <div class="radio-group">
-                            <label>Patologías</label>
-                            <label>
-                                <input type="radio" name="patologias" value="si" 
-                                       $if paciente.get('patologias') == 'si': checked>
-                                Sí
-                            </label>
-                            <label>
-                                <input type="radio" name="patologias" value="no" 
-                                       $if paciente.get('patologias') == 'no': checked>
-                                No
-                            </label>
-                        </div>
-                        
+                            <div class="radio-group">
+                                <label>Patologías</label>
+                                <label>
+                                    <input type="radio" name="patologias" value="si"
+                                        $if paciente.get('patologias') == 'si': checked>
+                                    Sí
+                                </label>
+                                <label>
+                                    <input type="radio" name="patologias" value="no"
+                                        $if paciente.get('patologias') == 'no': checked>
+                                    No
+                                </label>
+                            </div
+                                                    
                         <h3 class="section-header">Datos de la Madre</h3>
                         <div class="form-group">
                             <div class="form-label">Gestas:</div>
@@ -530,22 +585,21 @@ $def with (datos)
                             <input type="number" value="$paciente.get('cesareas', 'N/A')" class="form-input" name="cesareas" min="0">
                         </div>
                         
-                        <h3 class="section-header">Grado de Riesgo del Embarazo</h3>
                         <div class="radio-group">
-                            <label>Condición de Riesgo</label>
+                            <h3>Condición de Riesgo</h3>
                             <label>
-                                <input type="radio" name="riesgo" value="normal" 
-                                       $if paciente.get('riesgo') == 'normal': checked>
+                                <input type="radio" name="normal" 
+                                       {% if paciente.get('normal', '') == 'normal' %}checked{% endif %}>
                                 Normal
                             </label>
                             <label>
-                                <input type="radio" name="riesgo" value="riesgo" 
-                                       $if paciente.get('riesgo') == 'riesgo': checked>
+                                <input type="radio" name="riesgo" 
+                                       {% if paciente.get('riesgo', '') == 'riesgo' %}checked{% endif %}>
                                 Riesgo
                             </label>
                             <label>
-                                <input type="radio" name="riesgo" value="alto_riesgo" 
-                                       $if paciente.get('riesgo') == 'alto_riesgo': checked>
+                                <input type="radio" name="alto_riesgo" 
+                                       {% if paciente.get('alto_riesgo', '') == 'alto_riesgo' %}checked{% endif %}>
                                 Alto Riesgo
                             </label>
                         </div>
@@ -553,18 +607,18 @@ $def with (datos)
                         <h3 class="section-header">Terminación del Parto</h3>
                         <div class="radio-group">
                             <label>
-                                <input type="radio" name="terminacion" value="espontaneo" 
-                                       $if paciente.get('terminacion') == 'espontaneo': checked>
+                                <input type="radio" name="espontaneo" 
+                                       {% if paciente.get('espontaneo', '') == 'espontaneo' %}checked{% endif %}>
                                 Espontáneo
                             </label>
                             <label>
-                                <input type="radio" name="terminacion" value="intraoperatoria" 
-                                       $if paciente.get('terminacion') == 'intraoperatoria': checked>
+                                <input type="radio" name="intraoperatoria" 
+                                       {% if paciente.get('intraoperatoria', '') == 'intraoperatoria' %}checked{% endif %}>
                                 Intraoperatoria
                             </label>
                             <label>
-                                <input type="radio" name="terminacion" value="electiva" 
-                                       $if paciente.get('terminacion') == 'electiva': checked>
+                                <input type="radio" name="electiva" 
+                                       {% if paciente.get('electiva', '') == 'electiva' %}checked{% endif %}>
                                 Electiva
                             </label>
                         </div>
@@ -579,6 +633,7 @@ $def with (datos)
         </div>
         
         <!-- Sección: Documentación -->
+         
         <div class="section-container" id="seccion-documentacion" style="display: none;">
             <h3 class="section-header">Documentación</h3>
             <form method="post" action="" enctype="multipart/form-data">
@@ -616,6 +671,7 @@ $def with (datos)
     
     <!-- Script para la navegación entre pestañas -->
     <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Referencias a los elementos de las pestañas
             const tabFicha = document.getElementById('tab-ficha');
@@ -701,6 +757,24 @@ $def with (datos)
                 content.classList.toggle('active');
             });
         });
+        document.addEventListener('DOMContentLoaded', function() {
+    const fotoInput = document.getElementById('foto-input');
+    const fotoInputPaciente = document.getElementById('foto-input-paciente');
+    
+    if (fotoInputPaciente) {
+        fotoInputPaciente.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                // Copiar el archivo seleccionado al input principal
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(this.files[0]);
+                fotoInputPaciente.files = dataTransfer.files;
+                
+                // Enviar el formulario automáticamente
+                fotoInputPaciente.closest('form').submit();
+            }
+        });
+    }
+});
     </script>
 </body>
 </html>

@@ -188,6 +188,15 @@ class Personas:
             return False
 
 
+    def actualizar_foto_paciente(self, paciente_id, ruta_foto):
+        try:
+            self.db.child("pacientes").child(paciente_id).update({"foto_perfil": ruta_foto})
+            print(f"Foto actualizada para el paciente {paciente_id}")
+            return True
+        except Exception as e:
+            print(f"Error al actualizar foto de paciente: {str(e)}")
+            return False
+
 
 class CambiarEstado:
     def POST(self, paciente_id):
@@ -204,3 +213,5 @@ class CambiarEstado:
             return json.dumps({"success": True})
         except Exception as e:
             return json.dumps({"success": False, "error": str(e)})
+    
+

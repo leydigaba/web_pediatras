@@ -7,10 +7,13 @@ from controllers.iniciosesion import Iniciosesion as Iniciosesion
 from controllers.lista_personas import ListaPersonas as ListaPersonas
 from controllers.agregar_personas import AgregarPaciente as AgregarPaciente
 from controllers.detalle import DetalleUsuario as DetalleUsuario
+#from controllers.detalle import ActualizarFotoBebe as ActualizarFotoBebe
 from controllers.cerrarsesion import Logout as Logout
 from controllers.estadistica_personas import EstadisticaUsuario as EstadisticaUsuario
 from controllers.configuracion import Configuracion as Configuracion
 from controllers.configuracion import ActualizarConfiguracion as ActualizarConfiguracion
+from controllers.configuracion import ActualizarFoto as ActualizarFoto
+
 from controllers.ficha import DetallePersonas as DetallePersonas
 
 web.config.debug = False  
@@ -29,9 +32,10 @@ urls = (
     '/actualizar_configuracion', 'ActualizarConfiguracion',
     '/consulta', 'Consulta',
     '/cambiar_estado/(.*)', 'CambiarEstado',
-    '/credencial/(.*)', 'DetallePersonas'
-    
-
+    '/credencial/(.*)', 'DetallePersonas',
+    '/actualizar_foto', 'ActualizarFoto',
+    '/detalle_paciente/(.+)/actualizar_foto', 'ActualizarFotoBebe',
+    '/actualizar_foto_paciente', 'ActualizarFotoBebe'
 
 )
 

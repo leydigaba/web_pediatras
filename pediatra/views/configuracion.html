@@ -161,24 +161,6 @@ $def with (datos_pediatra, mensaje=None)
             margin-bottom: 1.5rem;
         }
         
-        /* Estilo para el input file personalizado */
-        .custom-file-upload {
-            border: 1px solid #ccc;
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-            border-radius: 0.25rem;
-            background-color: #f8f9fc;
-        }
-        
-        .photo-upload-section {
-            background-color: #f8f9fc;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px dashed #ccc;
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
             #sidebar-wrapper {
@@ -242,7 +224,6 @@ $def with (datos_pediatra, mensaje=None)
                     <div>
                         <h1 class="h3 mb-0 text-gray-800">Configuración</h1>
                         <p class="text-muted">Administra tu perfil de pediatra</p>
-                        
                     </div>
                 </div>
             </div>
@@ -272,9 +253,7 @@ $def with (datos_pediatra, mensaje=None)
                             <p><i class="fas fa-id-card me-2"></i>Licencia: $datos_pediatra.get('licencia')</p>
                     </div>
                 </div>
-                
 
-                
                 <!-- Formulario de datos personales -->
                 <form action="/actualizar_configuracion" method="POST" class="row g-3">
                     <div class="col-md-6 mb-3">
@@ -309,6 +288,11 @@ $def with (datos_pediatra, mensaje=None)
                         </button>
                     </div>
                 </form>
+
+                <!-- Formulario para subir foto (oculto) -->
+                <form action="/actualizar_foto" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="foto" id="foto-input-main" style="display:none;" accept="image/*">
+                </form>
             </div>
         </div>
     </div>
@@ -319,29 +303,7 @@ $def with (datos_pediatra, mensaje=None)
     <!-- Bootstrap JS y Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle sidebar en móvil
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar-wrapper');
-            const content = document.getElementById('page-content-wrapper');
-            
-            // Para dispositivos móviles, agregar botón para mostrar/ocultar sidebar
-            if (window.innerWidth <= 768) {
-                const toggleBtn = document.createElement('button');
-                toggleBtn.classList.add('btn', 'btn-primary', 'position-fixed');
-                toggleBtn.style.top = '1rem';
-                toggleBtn.style.left = '1rem';
-                toggleBtn.style.zIndex = '1000';
-                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                
-                document.body.appendChild(toggleBtn);
-                
-                toggleBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('');
-                    content.classList.toggle('');
-                });
-            }
-            
-            // Manejar la selección de foto desde el overlay
             const fotoInput = document.getElementById('foto-input');
             const fotoInputMain = document.getElementById('foto-input-main');
             
@@ -353,7 +315,7 @@ $def with (datos_pediatra, mensaje=None)
                     fotoInputMain.files = dataTransfer.files;
                     
                     // Enviar el formulario automáticamente
-                    document.querySelector('form[action="/actualizar_foto"]').submit();
+                    fotoInputMain.closest('form').submit();
                 }
             });
         });
