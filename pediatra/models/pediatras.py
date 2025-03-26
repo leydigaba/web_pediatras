@@ -340,18 +340,6 @@ class Personas:
             print(f"Error al subir documentos: {str(e)}")
             return None
 
-class CambiarEstado:
-    def POST(self, paciente_id):
-        try:
-            datos = json.loads(web.data())
-            nuevo_estado = datos.get("estado")
 
-            if nuevo_estado not in ["activo", "inactivo", "pendiente"]:
-                return web.badrequest()
 
-            doc_ref = db.collection("personas").document(paciente_id)
-            doc_ref.update({"estado": nuevo_estado})
 
-            return json.dumps({"success": True})
-        except Exception as e:
-            return json.dumps({"success": False, "error": str(e)})
